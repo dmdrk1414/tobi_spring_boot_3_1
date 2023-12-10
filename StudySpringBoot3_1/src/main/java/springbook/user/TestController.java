@@ -9,11 +9,18 @@ import java.sql.SQLException;
 
 @RestController
 public class TestController {
-    @GetMapping("test")
-    public Boolean testGetController() throws SQLException, ClassNotFoundException {
+    @GetMapping("user/dao")
+    public String userDaoTest() throws SQLException, ClassNotFoundException {
         UserDao userDao = new UserDao();
-        userDao.add(new User("1", "test", "1234"));
 
-        return true;
+        User user = new User("Whiteship", "박승찬", "married");
+        userDao.add(user);
+
+        System.out.println(user.getId() + " 등록 성공");
+
+        User user2 = userDao.get(user.getId());
+        System.out.println(user2.getName());
+
+        return user2.toString();
     }
 }

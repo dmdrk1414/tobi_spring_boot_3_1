@@ -1,11 +1,9 @@
 package springbook.user.dao;
 
+import lombok.AllArgsConstructor;
 import springbook.user.domain.User;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Collection;
 
 public class UserDao {
@@ -30,5 +28,35 @@ public class UserDao {
         // 작업 중에 생성된 Connection, Statement, ResultSet 같은 리소리는 작업을 마친 후 반드시 닫아준다.
         preparedStatement.close();
         connection.close();
+    }
+
+    public User get(String id) throws ClassNotFoundException, SQLException {
+        // Class.forName("com.mysql.jdbc.Driver");
+        // DB 연결을 위한 Connection을 가져온다.
+        Connection connection = DriverManager.getConnection("jdbc:h2:mem:testdb;MODE=MySQL", "sa", "");
+
+        // SQL을 담은 Statement(또는 PreparedStatement)을 만든다.
+        PreparedStatement preparedStatement = connection.prepareStatement(
+                "SELECT * FROM users WHERE id = ?"
+        );
+        preparedStatement.setString(1, id);
+
+        // 만들어진 Statement를 실행한다.
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        // resultSet의 다음을 찾는다 (초기에는 null이다.)
+        resultSet.next();
+
+        String searchId = resultSet.getString("id");
+        String searchName = resultSet.getString("name");
+        String searchPassword = resultSet.getString("password");
+        User user = new User(searchId, searchName, searchPassword);
+
+        // 작업 중에 생성된 Connectin, Statement, ResultSet 같은 리소스는 작업을 마친 후 반드기 닫아준다.
+        resultSet.close();
+        preparedStatement.close();
+        connection.close();
+
+        return user;
     }
 }
