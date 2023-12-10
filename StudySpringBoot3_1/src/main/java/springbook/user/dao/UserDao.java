@@ -8,11 +8,8 @@ import java.util.Collection;
 
 public class UserDao {
     public void add(User user) throws SQLException, ClassNotFoundException {
-//        Class.forName("com.mysql.jdbc.Driver");
-
-        // H2 Database 연결
         // DB 연결을 위한 Connection을 가져온다.
-        Connection connection = DriverManager.getConnection("jdbc:h2:mem:testdb;MODE=MySQL", "sa", "");
+        Connection connection = getConnection();
 
         // SQL을 담은 Statement(또는 PreparedStatement)을 만든다.
         PreparedStatement preparedStatement = connection.prepareStatement(
@@ -31,9 +28,8 @@ public class UserDao {
     }
 
     public User get(String id) throws ClassNotFoundException, SQLException {
-        // Class.forName("com.mysql.jdbc.Driver");
         // DB 연결을 위한 Connection을 가져온다.
-        Connection connection = DriverManager.getConnection("jdbc:h2:mem:testdb;MODE=MySQL", "sa", "");
+        Connection connection = getConnection();
 
         // SQL을 담은 Statement(또는 PreparedStatement)을 만든다.
         PreparedStatement preparedStatement = connection.prepareStatement(
@@ -58,5 +54,20 @@ public class UserDao {
         connection.close();
 
         return user;
+    }
+
+    /**
+     * 중복된 코드를 독립적인 메소드로 만들어서 중복을 제거했다.
+     *
+     * @return
+     */
+    private Connection getConnection() throws SQLException {
+        // Class.forName("com.mysql.jdbc.Driver");
+
+        // H2 Database 연결
+        // DB 연결을 위한 Connection을 가져온다.
+        Connection connection = DriverManager.getConnection("jdbc:h2:mem:testdb;MODE=MySQL", "sa", "");
+
+        return connection;
     }
 }
