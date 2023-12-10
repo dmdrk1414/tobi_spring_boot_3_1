@@ -1,4 +1,4 @@
-package springbook.user.dao;
+package springbook.user.book.p67;
 
 import springbook.user.constant.DbConstant;
 
