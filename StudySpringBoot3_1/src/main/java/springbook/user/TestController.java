@@ -2,14 +2,10 @@ package springbook.user;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import springbook.user.dao.DUserDao;
-import springbook.user.dao.NUserDao;
 import springbook.user.dao.UserDao;
 import springbook.user.domain.User;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 public class TestController {
@@ -34,7 +30,20 @@ public class TestController {
 //        return list.toString();
 //    }
 
-    @GetMapping("user/dao/p72/test")
+//    @GetMapping("user/dao/p72/test")
+//    public String p72Test() throws SQLException, ClassNotFoundException {
+//        UserDao userDao = new UserDao();
+//
+//        User user = new User("User", "박승찬", "married");
+//
+//        userDao.add(user);
+//
+//        User searchUser = userDao.get(user.getId());
+//
+//        return searchUser.toString();
+//    }
+
+    @GetMapping("user/dao/p75/test")
     public String p72Test() throws SQLException, ClassNotFoundException {
         UserDao userDao = new UserDao();
 
@@ -46,4 +55,5 @@ public class TestController {
 
         return searchUser.toString();
     }
+
 }

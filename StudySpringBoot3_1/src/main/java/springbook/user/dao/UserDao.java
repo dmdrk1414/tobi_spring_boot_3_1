@@ -1,24 +1,23 @@
 package springbook.user.dao;
 
-import lombok.AllArgsConstructor;
 import springbook.user.domain.User;
 
 import java.sql.*;
-import java.util.Collection;
 
 public class UserDao {
-    // connection을 만들어주는 클래스를 생성 (클래스로 분리)
-    // 상태를 관리하는 것이 아니니 한번만 만들어 인스턴스 변수에 저장하고 메소드에서 사용
-    private SimpleConnectionMaker simpleConnectionMaker;
+    // p76 인터페이스를 통해 오브젝트에 접근하므로 구체적인 클래스 정보를 알필요가 없다.
+    private ConnectionMaker connectionMaker;
 
     public UserDao() {
-        this.simpleConnectionMaker = new SimpleConnectionMaker();
+        // p76 하지만 여기에는 클래스 이름이 나온다.
+        this.connectionMaker = new DConnectionMaker();
     }
 
     public void add(User user) throws SQLException, ClassNotFoundException {
         // DB 연결을 위한 Connection을 가져온다.
         // simpleConnectionMaker을 이용한 Connection을 생성한다.
-        Connection connection = simpleConnectionMaker.makeNewConnection();
+        // p76 인터페이스에 정의된 메소드를 사용하므로 클래스가 바뀐다고 해도 메소드 이름이 변경될 걱정은 없다.
+        Connection connection = connectionMaker.makeConnection();
 
         // SQL을 담은 Statement(또는 PreparedStatement)을 만든다.
         PreparedStatement preparedStatement = connection.prepareStatement(
@@ -39,7 +38,8 @@ public class UserDao {
     public User get(String id) throws ClassNotFoundException, SQLException {
         // DB 연결을 위한 Connection을 가져온다.
         // simpleConnectionMaker을 이용한 Connection을 생성한다.
-        Connection connection = simpleConnectionMaker.makeNewConnection();
+        // p76 인터페이스에 정의된 메소드를 사용하므로 클래스가 바뀐다고 해도 메소드 이름이 변경될 걱정은 없다.
+        Connection connection = connectionMaker.makeConnection();
 
         // SQL을 담은 Statement(또는 PreparedStatement)을 만든다.
         PreparedStatement preparedStatement = connection.prepareStatement(
