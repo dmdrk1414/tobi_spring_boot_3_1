@@ -12,3 +12,10 @@ spring:
         web-allow-others: true
   jpa:
     defer-datasource-initialization: true
+  
+  #  저장시 자동 시작
+  devtools:
+    restart:
+      enabled: true
+  thymeleaf:
+    cache: false

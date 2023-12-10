@@ -30,6 +30,10 @@ dependencies {
     // 반복 메서드 작성 작업을 줄여준다. 77쪽
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+
+    // 스프링 저장시 자동실행
+    // https://devmango.tistory.com/85
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
 }
 
 test {
