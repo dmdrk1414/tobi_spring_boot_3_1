@@ -6,10 +6,19 @@ import springbook.user.domain.User;
 import java.sql.*;
 import java.util.Collection;
 
-public abstract class UserDao {
+public class UserDao {
+    // connection을 만들어주는 클래스를 생성 (클래스로 분리)
+    // 상태를 관리하는 것이 아니니 한번만 만들어 인스턴스 변수에 저장하고 메소드에서 사용
+    private SimpleConnectionMaker simpleConnectionMaker;
+
+    public UserDao() {
+        this.simpleConnectionMaker = new SimpleConnectionMaker();
+    }
+
     public void add(User user) throws SQLException, ClassNotFoundException {
         // DB 연결을 위한 Connection을 가져온다.
-        Connection connection = getConnection();
+        // simpleConnectionMaker을 이용한 Connection을 생성한다.
+        Connection connection = simpleConnectionMaker.makeNewConnection();
 
         // SQL을 담은 Statement(또는 PreparedStatement)을 만든다.
         PreparedStatement preparedStatement = connection.prepareStatement(
@@ -29,7 +38,8 @@ public abstract class UserDao {
 
     public User get(String id) throws ClassNotFoundException, SQLException {
         // DB 연결을 위한 Connection을 가져온다.
-        Connection connection = getConnection();
+        // simpleConnectionMaker을 이용한 Connection을 생성한다.
+        Connection connection = simpleConnectionMaker.makeNewConnection();
 
         // SQL을 담은 Statement(또는 PreparedStatement)을 만든다.
         PreparedStatement preparedStatement = connection.prepareStatement(
@@ -55,13 +65,4 @@ public abstract class UserDao {
 
         return user;
     }
-
-    /**
-     * 중복된 코드를 독립적인 메소드로 만들어서 중복을 제거했다.
-     * 다양한 데이터베이스의 확장을 위해 추상 메서드를 사용하여
-     * 확장, 변화를 반기는 DAO을 만들었다.
-     *
-     * @return
-     */
-    public abstract Connection getConnection() throws SQLException, ClassNotFoundException;
 }

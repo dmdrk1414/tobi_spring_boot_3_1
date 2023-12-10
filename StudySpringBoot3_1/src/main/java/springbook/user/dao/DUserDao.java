@@ -6,13 +6,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class DUserDao extends UserDao {
-    /**
-     * D사의 connection을 이용해 데이터베이스의 확장성을 생각한다.
-     *
-     * @return
-     */
-    @Override
+public class DUserDao {
+
     public Connection getConnection() throws SQLException, ClassNotFoundException {
         // Class.forName("com.mysql.jdbc.Driver");
 

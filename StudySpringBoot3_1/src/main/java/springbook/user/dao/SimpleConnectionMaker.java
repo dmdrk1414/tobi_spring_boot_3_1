@@ -6,13 +6,15 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class NUserDao {
+public class SimpleConnectionMaker {
+
     /**
-     * N사의 connection을 이용해 데이터베이스의 확장성을 생각한다.
+     * 상속을 통해서 만들어진 getConnection의 구현 코드가 매 DAO 클래스마다 중복된다.
+     * DB 커넥션과 관련된 부분을 서브클래스가 아니라, 아예 별도의 클래스에 담는다.
      *
      * @return
      */
-    public Connection getConnection() throws SQLException, ClassNotFoundException {
+    public Connection makeNewConnection() throws ClassNotFoundException, SQLException {
         // Class.forName("com.mysql.jdbc.Driver");
 
         // H2 Database 연결
