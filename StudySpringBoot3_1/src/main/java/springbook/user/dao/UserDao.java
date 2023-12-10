@@ -8,9 +8,10 @@ public class UserDao {
     // p76 인터페이스를 통해 오브젝트에 접근하므로 구체적인 클래스 정보를 알필요가 없다.
     private ConnectionMaker connectionMaker;
 
-    public UserDao() {
+    // p81 UserDao을 생성하는 클라이언트에게 ConnectionMaker을 생성하는 책임을 준다.
+    public UserDao(ConnectionMaker connectionMaker) {
         // p76 하지만 여기에는 클래스 이름이 나온다.
-        this.connectionMaker = new DConnectionMaker();
+        this.connectionMaker = connectionMaker;
     }
 
     public void add(User user) throws SQLException, ClassNotFoundException {
