@@ -6,7 +6,7 @@ import springbook.user.domain.User;
 import java.sql.*;
 import java.util.Collection;
 
-public class UserDao {
+public abstract class UserDao {
     public void add(User user) throws SQLException, ClassNotFoundException {
         // DB 연결을 위한 Connection을 가져온다.
         Connection connection = getConnection();
@@ -58,16 +58,10 @@ public class UserDao {
 
     /**
      * 중복된 코드를 독립적인 메소드로 만들어서 중복을 제거했다.
+     * 다양한 데이터베이스의 확장을 위해 추상 메서드를 사용하여
+     * 확장, 변화를 반기는 DAO을 만들었다.
      *
      * @return
      */
-    private Connection getConnection() throws SQLException {
-        // Class.forName("com.mysql.jdbc.Driver");
-
-        // H2 Database 연결
-        // DB 연결을 위한 Connection을 가져온다.
-        Connection connection = DriverManager.getConnection("jdbc:h2:mem:testdb;MODE=MySQL", "sa", "");
-
-        return connection;
-    }
+    public abstract Connection getConnection() throws SQLException, ClassNotFoundException;
 }
