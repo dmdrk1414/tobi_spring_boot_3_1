@@ -19,18 +19,18 @@ public class DaoFactory {
      */
     @Bean // p96 오브젝트를 만들어 주는 메서드
     public UserDao userDaoDConnection() {
-        UserDao userDao = new UserDao(getConnectionMaker());
+        UserDao userDao = new UserDao(connectionMaker());
         return userDao;
     }
 
     @Bean // p96 오브젝트를 만들어 주는 메서드
     public UserDao userDaoNConnection() {
-        UserDao userDao = new UserDao(getConnectionMaker());
+        UserDao userDao = new UserDao(connectionMaker());
         return userDao;
     }
 
     @Bean // p96 오브젝트를 만들어 주는 메서드
-    public ConnectionMaker getConnectionMaker() {
+    public ConnectionMaker connectionMaker() {
         return new DConnectionMaker();
     }
 }
