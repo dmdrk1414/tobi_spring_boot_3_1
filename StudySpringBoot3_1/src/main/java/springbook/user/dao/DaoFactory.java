@@ -14,14 +14,16 @@ public class DaoFactory {
      * @return
      */
     public UserDao userDaoDConnection() {
-        ConnectionMaker connectionMaker = new DConnectionMaker();
-        UserDao userDao = new UserDao(connectionMaker);
+        UserDao userDao = new UserDao(getConnectionMaker());
         return userDao;
     }
 
     public UserDao userDaoNConnection() {
-        ConnectionMaker connectionMaker = new NConnectionMaker();
-        UserDao userDao = new UserDao(connectionMaker);
+        UserDao userDao = new UserDao(getConnectionMaker());
         return userDao;
+    }
+
+    private NConnectionMaker getConnectionMaker() {
+        return new NConnectionMaker();
     }
 }
