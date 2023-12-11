@@ -2,10 +2,7 @@ package springbook.user;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import springbook.user.dao.ConnectionMaker;
-import springbook.user.dao.DConnectionMaker;
-import springbook.user.dao.NConnectionMaker;
-import springbook.user.dao.UserDao;
+import springbook.user.dao.*;
 import springbook.user.domain.User;
 
 import java.sql.SQLException;
@@ -61,14 +58,39 @@ public class TestController {
 //        return searchUser.toString();
 //    }
 
-    @GetMapping("user/dao/p81/test")
+//    @GetMapping("user/dao/p81/test")
+//    public String p72Test() throws SQLException, ClassNotFoundException {
+//        // client(컨트롤러)에게 DConnectionMaker을 만드는 책임을 넘긴다.
+//        NConnectionMaker nConnectionMaker = new NConnectionMaker();
+//        DConnectionMaker dConnectionMaker = new DConnectionMaker();
+//
+//        UserDao nUserDao = new UserDao(nConnectionMaker);
+//        UserDao dUserDao = new UserDao(dConnectionMaker);
+//
+//        User user_N = new User("NUser", "박승찬", "married");
+//        User user_D = new User("DUser", "박승찬", "married");
+//
+//        nUserDao.add(user_N);
+//        dUserDao.add(user_D);
+//
+//        User searchNUser = nUserDao.get(user_N.getId());
+//        User searchDUser = dUserDao.get(user_D.getId());
+//
+//        List<User> list = new ArrayList<>();
+//        list.add(searchNUser);
+//        list.add(searchDUser);
+//
+//        return list.toString();
+//    }
+
+    @GetMapping("user/dao/p89/test")
     public String p72Test() throws SQLException, ClassNotFoundException {
         // client(컨트롤러)에게 DConnectionMaker을 만드는 책임을 넘긴다.
         NConnectionMaker nConnectionMaker = new NConnectionMaker();
         DConnectionMaker dConnectionMaker = new DConnectionMaker();
 
-        UserDao nUserDao = new UserDao(nConnectionMaker);
-        UserDao dUserDao = new UserDao(dConnectionMaker);
+        UserDao nUserDao = new DaoFactory().userDaoNConnection();
+        UserDao dUserDao = new DaoFactory().userDaoDConnection();
 
         User user_N = new User("NUser", "박승찬", "married");
         User user_D = new User("DUser", "박승찬", "married");
@@ -85,5 +107,4 @@ public class TestController {
 
         return list.toString();
     }
-
 }
