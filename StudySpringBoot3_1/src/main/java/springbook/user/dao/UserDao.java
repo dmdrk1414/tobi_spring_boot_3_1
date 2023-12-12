@@ -6,7 +6,7 @@ import java.sql.*;
 
 public class UserDao {
     // p76 인터페이스를 통해 오브젝트에 접근하므로 구체적인 클래스 정보를 알필요가 없다.
-    private final ConnectionMaker connectionMaker;
+    private ConnectionMaker connectionMaker;
     // filed에 선언을 하면 데이터가 망가진다(싱글톤이기에)
 //    private Connection connection; // p110 로컬 변수를 이용한 개별적으로 바뀌는 정보를 로컬변수르 정의
 //    private User user; // p110 로컬 변수를 이용한 개별적으로 바뀌는 정보를 로컬변수르 정의
@@ -14,6 +14,16 @@ public class UserDao {
     // p81 UserDao을 생성하는 클라이언트에게 ConnectionMaker을 생성하는 책임을 준다.
     public UserDao(ConnectionMaker connectionMaker) {
         // p76 하지만 여기에는 클래스 이름이 나온다.
+        this.connectionMaker = connectionMaker;
+    }
+
+    /**
+     * p127 수정자(set)메소드 DI의 전형적인 코드
+     * 메소드를 통행 DI 방식
+     *
+     * @param connectionMaker
+     */
+    public void setConnectionMaker(ConnectionMaker connectionMaker) {
         this.connectionMaker = connectionMaker;
     }
 
