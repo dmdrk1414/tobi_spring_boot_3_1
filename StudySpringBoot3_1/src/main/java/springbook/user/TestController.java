@@ -102,15 +102,36 @@ public class TestController {
 //        return list.toString();
 //    }
 
-    @GetMapping("user/dao/p97/test")
-    public String p97Test() throws SQLException, ClassNotFoundException {
-        // p97 Ioc 제어의 역전의 파트에서 DaoFactory#userDaoDConnection의 제어를 context에 의해 운영된다.
-        // DaoFactory.class에 있는 userDaoDConnection의 메서드를 Bean으로 등록
-        // Context을 이용해 객체생성 및 관리
-        // @Configuration으로 관리하는 클래스는 AnnotationConfigApplicationContext을 이용하여 관리한다.₩
+//    @GetMapping("user/dao/p97/test")
+//    public String p97Test() throws SQLException, ClassNotFoundException {
+//        // p97 Ioc 제어의 역전의 파트에서 DaoFactory#userDaoDConnection의 제어를 context에 의해 운영된다.
+//        // DaoFactory.class에 있는 userDaoDConnection의 메서드를 Bean으로 등록
+//        // Context을 이용해 객체생성 및 관리
+//        // @Configuration으로 관리하는 클래스는 AnnotationConfigApplicationContext을 이용하여 관리한다.₩
+//        AnnotationConfigApplicationContext context =
+//                new AnnotationConfigApplicationContext(DaoFactory.class);
+//        UserDao dUserDao = context.getBean("userDaoDConnection", UserDao.class);
+//
+//        User user_D = new User("DUser", "박승찬", "married");
+//
+//        dUserDao.add(user_D);
+//
+//        User searchDUser = dUserDao.get(user_D.getId());
+//
+//        List<User> list = new ArrayList<>();
+//        list.add(searchDUser);
+//
+//        return list.toString();
+//    }
+
+    @GetMapping("user/dao/p124/test")
+    public String p124Test() throws SQLException, ClassNotFoundException {
+        // 124
+        // 기본적으로는 UserDaoTest와 같지만 설정용 클래스를 CountingDaoFactory로 변경
+        // CountingConnectionMaker 빈을 가져온다.
         AnnotationConfigApplicationContext context =
-                new AnnotationConfigApplicationContext(DaoFactory.class);
-        UserDao dUserDao = context.getBean("userDaoDConnection", UserDao.class);
+                new AnnotationConfigApplicationContext(CountingDaoFactory.class);
+        UserDao dUserDao = context.getBean("countUserDao", UserDao.class);
 
         User user_D = new User("DUser", "박승찬", "married");
 
@@ -120,6 +141,13 @@ public class TestController {
 
         List<User> list = new ArrayList<>();
         list.add(searchDUser);
+
+        // p124
+        // CountingConnectionMaker빈을 가져온다.
+        // COuntingConnectionMaker에는 그동안 DAO를 통해 DB 커넥션을 요청한 횟수만큼 카운터가 증가.
+        // DL(읜존관계 검색)을 사용하면 이름을 이용해 어떤 빈이든 가져올 수 있다.
+        CountingConnectionMaker countingConnectionMaker = context.getBean("countConnectionMaker", CountingConnectionMaker.class);
+        System.out.println(countingConnectionMaker.getCounter());
 
         return list.toString();
     }
