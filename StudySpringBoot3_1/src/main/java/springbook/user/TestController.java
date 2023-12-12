@@ -1,7 +1,7 @@
 package springbook.user;
 
-import org.apache.catalina.core.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.GenericXmlApplicationContext;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springbook.user.dao.*;
@@ -148,6 +148,31 @@ public class TestController {
         // DL(읜존관계 검색)을 사용하면 이름을 이용해 어떤 빈이든 가져올 수 있다.
         CountingConnectionMaker countingConnectionMaker = context.getBean("countConnectionMaker", CountingConnectionMaker.class);
         System.out.println(countingConnectionMaker.getCounter());
+
+        return list.toString();
+    }
+
+    @GetMapping("user/dao/p135/test")
+    public String p135Test() throws SQLException, ClassNotFoundException {
+        // p134
+        // xml 파일의 등록한 Bean을 Context으로 이용하는 방법
+        // GenericXmlApplicationContext을 많이 사용한다.
+        GenericXmlApplicationContext context =
+                new GenericXmlApplicationContext("xml/applicationContext.xml");
+
+        // 관련 class을 이용한 content 이용 방법 보통 쓰지 않는다.
+//        ClassPathXmlApplicationContext context =
+//                new ClassPathXmlApplicationContext("/applicationContext.xml");
+        UserDao dUserDao = context.getBean("userDao", UserDao.class);
+
+        User user_D = new User("DUser", "박승찬", "married");
+
+        dUserDao.add(user_D);
+
+        User searchDUser = dUserDao.get(user_D.getId());
+
+        List<User> list = new ArrayList<>();
+        list.add(searchDUser);
 
         return list.toString();
     }
