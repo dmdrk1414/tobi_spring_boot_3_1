@@ -152,6 +152,13 @@ public class TestController {
         return list.toString();
     }
 
+    /**
+     * DaoFactory 없이 UserDao 생성하는 방법
+     *
+     * @return
+     * @throws SQLException
+     * @throws ClassNotFoundException
+     */
     @GetMapping("user/dao/p135/test")
     public String p135Test() throws SQLException, ClassNotFoundException {
         // p134
