@@ -183,4 +183,37 @@ public class TestController {
 
         return list.toString();
     }
+
+    @GetMapping("user/dao/p155/test")
+    public String p155Test() throws SQLException, ClassNotFoundException {
+        // p134
+        // xml 파일의 등록한 Bean을 Context으로 이용하는 방법
+        // GenericXmlApplicationContext을 많이 사용한다.
+        GenericXmlApplicationContext context =
+                new GenericXmlApplicationContext("xml/applicationContext.xml");
+
+        // 관련 class을 이용한 content 이용 방법 보통 쓰지 않는다.
+//        ClassPathXmlApplicationContext context =
+//                new ClassPathXmlApplicationContext("/applicationContext.xml");
+        UserDao dUserDao = context.getBean("userDao", UserDao.class);
+
+        User user_D = new User("DUser", "박승찬", "married");
+
+        dUserDao.add(user_D);
+
+        User searchDUser = dUserDao.get(user_D.getId());
+
+        List<User> list = new ArrayList<>();
+        list.add(searchDUser);
+
+        if (!user_D.getName().equals(searchDUser.getName())) {
+            System.out.println("테스트 실패 name");
+        } else if (!user_D.getPassword().equals(searchDUser.getPassword())) {
+            System.out.println("테스트 실패 password");
+        } else {
+            System.out.println("조회 테스트 성공");
+        }
+
+        return list.toString();
+    }
 }
