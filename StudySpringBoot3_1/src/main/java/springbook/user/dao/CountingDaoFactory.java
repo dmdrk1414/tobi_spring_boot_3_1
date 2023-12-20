@@ -22,10 +22,10 @@ public class CountingDaoFactory {
      *
      * @return
      */
-    @Bean
-    public UserDao countUserDao() {
-        return new UserDao(countConnectionMaker());
-    }
+//    @Bean
+//    public UserDao countUserDao() {
+//        return new UserDao(countConnectionMaker());
+//    }
 
     /**
      * * p124
