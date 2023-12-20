@@ -3,37 +3,19 @@ package springbook.user.dao;
 import lombok.NoArgsConstructor;
 import springbook.user.domain.User;
 
+import javax.sql.DataSource;
 import java.sql.*;
 
 @NoArgsConstructor // 빈을 사용하기 위해 기본 생성자 생성
 public class UserDao {
-    // p76 인터페이스를 통해 오브젝트에 접근하므로 구체적인 클래스 정보를 알필요가 없다.
-    private ConnectionMaker connectionMaker;
-    // filed에 선언을 하면 데이터가 망가진다(싱글톤이기에)
-//    private Connection connection; // p110 로컬 변수를 이용한 개별적으로 바뀌는 정보를 로컬변수르 정의
-//    private User user; // p110 로컬 변수를 이용한 개별적으로 바뀌는 정보를 로컬변수르 정의
+    private DataSource dataSource;
 
-    // p81 UserDao을 생성하는 클라이언트에게 ConnectionMaker을 생성하는 책임을 준다.
-    public UserDao(ConnectionMaker connectionMaker) {
-        // p76 하지만 여기에는 클래스 이름이 나온다.
-        this.connectionMaker = connectionMaker;
-    }
-
-    /**
-     * p127 수정자(set)메소드 DI의 전형적인 코드
-     * 메소드를 통행 DI 방식
-     *
-     * @param connectionMaker
-     */
-    public void setConnectionMaker(ConnectionMaker connectionMaker) {
-        this.connectionMaker = connectionMaker;
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
     public void add(User user) throws SQLException, ClassNotFoundException {
-        // DB 연결을 위한 Connection을 가져온다.
-        // simpleConnectionMaker을 이용한 Connection을 생성한다.
-        // p76 인터페이스에 정의된 메소드를 사용하므로 클래스가 바뀐다고 해도 메소드 이름이 변경될 걱정은 없다.
-        Connection connection = connectionMaker.makeConnection();
+        Connection connection = dataSource.getConnection();
 
         // SQL을 담은 Statement(또는 PreparedStatement)을 만든다.
         PreparedStatement preparedStatement = connection.prepareStatement(
@@ -52,10 +34,7 @@ public class UserDao {
     }
 
     public User get(String id) throws ClassNotFoundException, SQLException {
-        // DB 연결을 위한 Connection을 가져온다.
-        // simpleConnectionMaker을 이용한 Connection을 생성한다.
-        // p76 인터페이스에 정의된 메소드를 사용하므로 클래스가 바뀐다고 해도 메소드 이름이 변경될 걱정은 없다.
-        Connection connection = connectionMaker.makeConnection();
+        Connection connection = dataSource.getConnection();
 
         // SQL을 담은 Statement(또는 PreparedStatement)을 만든다.
         PreparedStatement preparedStatement = connection.prepareStatement(
