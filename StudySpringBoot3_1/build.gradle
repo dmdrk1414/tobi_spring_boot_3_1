@@ -34,6 +34,9 @@ dependencies {
     // 스프링 저장시 자동실행
     // https://devmango.tistory.com/85
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    // mysql 연결
+    implementation 'mysql:mysql-connector-java:8.0.27'
 }
 
 test {
