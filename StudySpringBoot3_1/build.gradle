@@ -23,6 +23,7 @@ dependencies {
 
     //  스프링 데이터 JPA
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+//    testImplementation 'junit:junit:4.13.1'
 
     // 임메모리 데이터배이스, 로컬과 테스트 환경에서 사용 77쪽
     runtimeOnly 'com.h2database:h2'

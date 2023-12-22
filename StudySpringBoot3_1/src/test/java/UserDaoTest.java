@@ -2,11 +2,13 @@ import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.stereotype.Component;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import springbook.user.dao.UserDao;
 import springbook.user.domain.User;
 
@@ -15,19 +17,19 @@ import java.sql.SQLException;
 import static org.assertj.core.api.Assertions.*;
 import static org.hamcrest.CoreMatchers.is;
 
-@Component
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(locations = "/xml/applicationContext.xml")
 public class UserDaoTest {
     private UserDao dao;
     private User user1;
     private User user2;
     private User user3;
+    @Autowired
+    private ApplicationContext context;
 
     @BeforeEach
     public void setUp() {
-        GenericXmlApplicationContext context =
-                new GenericXmlApplicationContext("xml/applicationContext.xml");
-
-        dao = context.getBean("userDao", UserDao.class);
+        dao = this.context.getBean("userDao", UserDao.class);
 
         this.user1 = new User("gyumee", "박성철", "springno1");
         this.user2 = new User("leegw700", "이길원", "springno2");
