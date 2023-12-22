@@ -4,6 +4,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.datasource.SingleConnectionDataSource;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import springbook.user.dao.UserDao;
@@ -15,6 +17,7 @@ import java.sql.SQLException;
 import static org.assertj.core.api.Assertions.*;
 import static org.hamcrest.CoreMatchers.is;
 
+@DirtiesContext // 테스트 메서드에서 애플리케이션 컨텍스트의 구성이나 상태를 변경한다는 것을 테스트 컨텍스트 프레임워크에 알려준다.
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = "/xml/applicationContext.xml")
 public class UserDaoTest {
@@ -28,8 +31,6 @@ public class UserDaoTest {
     private UserDao userDao2;
     @Autowired
     private DataSource source;
-    @Autowired
-    private DataSource dataSource;
     private User user1;
     private User user2;
     private User user3;
@@ -42,9 +43,8 @@ public class UserDaoTest {
         this.user2 = new User("leegw700", "이길원", "springno2");
         this.user3 = new User("bumhin", "박범진", "springno3");
 
-        System.out.println(userDao);
-        System.out.println(userDao2);
-        System.out.println();
+        DataSource dataSource = new SingleConnectionDataSource("jdbc:mysql://localhost/testdb", "root", "qkrtmdcks1!", true);
+        userDao.setDataSource(dataSource);
     }
 
     @Test
