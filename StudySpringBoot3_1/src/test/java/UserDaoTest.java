@@ -1,4 +1,5 @@
 import org.aspectj.lang.annotation.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,14 +17,26 @@ import static org.hamcrest.CoreMatchers.is;
 
 @Component
 public class UserDaoTest {
-    @Test
-    public void addAndGet() throws Exception {
-        // given
+    private UserDao dao;
+    private User user1;
+    private User user2;
+    private User user3;
+
+    @BeforeEach
+    public void setUp() {
         GenericXmlApplicationContext context =
                 new GenericXmlApplicationContext("xml/applicationContext.xml");
 
-        UserDao dao = context.getBean("userDao", UserDao.class);
+        dao = context.getBean("userDao", UserDao.class);
 
+        this.user1 = new User("gyumee", "박성철", "springno1");
+        this.user2 = new User("leegw700", "이길원", "springno2");
+        this.user3 = new User("bumhin", "박범진", "springno3");
+    }
+
+    @Test
+    public void addAndGet() throws Exception {
+        // given
         // 테스트를 위한 deleteAll 추가
         dao.deleteAll();
         assertThat(dao.getCount()).isEqualTo(0);
@@ -45,12 +58,6 @@ public class UserDaoTest {
     @Test
     public void count_을_세세하게_테스트() throws Exception {
         // given
-        ApplicationContext context = new GenericXmlApplicationContext("xml/applicationContext.xml");
-
-        UserDao dao = context.getBean("userDao", UserDao.class);
-        User user1 = new User("dmdrk1414", "박승찬", "1234");
-        User user2 = new User("dmdrk14142", "박승찬2", "1234");
-        User user3 = new User("dmdrk14143", "박승찬3", "1234");
 
         // when
         // then
@@ -70,10 +77,6 @@ public class UserDaoTest {
     @Test
     public void getUserFailure() throws SQLException {
         // given
-        ApplicationContext context = new GenericXmlApplicationContext("xml/applicationContext.xml");
-
-        // when
-        UserDao dao = context.getBean("userDao", UserDao.class);
         dao.deleteAll();
 
         // then
