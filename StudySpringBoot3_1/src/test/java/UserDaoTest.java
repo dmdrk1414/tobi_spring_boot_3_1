@@ -1,14 +1,17 @@
+import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 import springbook.user.dao.UserDao;
 import springbook.user.domain.User;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.useDefaultDateFormatsOnly;
+import java.sql.SQLException;
+
+import static org.assertj.core.api.Assertions.*;
 import static org.hamcrest.CoreMatchers.is;
 
 @Component
@@ -62,5 +65,22 @@ public class UserDaoTest {
 
         dao.add(user3);
         assertThat(dao.getCount()).isEqualTo(3);
+    }
+
+    @Test
+    public void getUserFailure() throws SQLException {
+        // given
+        ApplicationContext context = new GenericXmlApplicationContext("xml/applicationContext.xml");
+
+        // when
+        UserDao dao = context.getBean("userDao", UserDao.class);
+        dao.deleteAll();
+
+        // then
+        assertThat(dao.getCount()).isEqualTo(0);
+
+        String searchId = "unknown_id";
+        assertThatThrownBy(() -> dao.get(searchId))
+                .isInstanceOf(EmptyResultDataAccessException.class);
     }
 }

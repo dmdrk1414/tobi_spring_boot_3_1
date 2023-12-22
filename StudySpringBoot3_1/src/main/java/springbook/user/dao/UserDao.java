@@ -1,6 +1,7 @@
 package springbook.user.dao;
 
 import lombok.NoArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import springbook.user.domain.User;
 
 import javax.sql.DataSource;
@@ -45,18 +46,24 @@ public class UserDao {
         // 만들어진 Statement를 실행한다.
         ResultSet resultSet = preparedStatement.executeQuery();
 
-        // resultSet의 다음을 찾는다 (초기에는 null이다.)
-        resultSet.next();
+        User user = null;
 
-        String searchId = resultSet.getString("id");
-        String searchName = resultSet.getString("name");
-        String searchPassword = resultSet.getString("password");
-        User user = new User(searchId, searchName, searchPassword);
+        // resultSet의 다음을 찾는다 (초기에는 null이다.)
+        if (resultSet.next()) {
+            String searchId = resultSet.getString("id");
+            String searchName = resultSet.getString("name");
+            String searchPassword = resultSet.getString("password");
+            user = new User(searchId, searchName, searchPassword);
+        }
 
         // 작업 중에 생성된 Connectin, Statement, ResultSet 같은 리소스는 작업을 마친 후 반드기 닫아준다.
         resultSet.close();
         preparedStatement.close();
         connection.close();
+
+        if (user == null) {
+            throw new EmptyResultDataAccessException(1);
+        }
 
         return user;
     }
