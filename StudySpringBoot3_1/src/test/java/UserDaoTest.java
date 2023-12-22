@@ -17,9 +17,9 @@ import java.sql.SQLException;
 import static org.assertj.core.api.Assertions.*;
 import static org.hamcrest.CoreMatchers.is;
 
-@DirtiesContext // 테스트 메서드에서 애플리케이션 컨텍스트의 구성이나 상태를 변경한다는 것을 테스트 컨텍스트 프레임워크에 알려준다.
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(locations = "/xml/applicationContext.xml")
+//@DirtiesContext // 테스트 메서드에서 애플리케이션 컨텍스트의 구성이나 상태를 변경한다는 것을 테스트 컨텍스트 프레임워크에 알려준다.
+@ExtendWith(SpringExtension.class) // xml의 DI을 하기위한 JUNIT5의 확장
+@ContextConfiguration(locations = "/xml/test-applicationContext.xml")
 public class UserDaoTest {
     // 타입 방식의 자동 와이어링
     // 만약 UserDao가 2개이면
@@ -43,8 +43,9 @@ public class UserDaoTest {
         this.user2 = new User("leegw700", "이길원", "springno2");
         this.user3 = new User("bumhin", "박범진", "springno3");
 
-        DataSource dataSource = new SingleConnectionDataSource("jdbc:mysql://localhost/testdb", "root", "qkrtmdcks1!", true);
-        userDao.setDataSource(dataSource);
+        // test 용 xml을 설정하여 따로 DI을 하였다.
+//        DataSource dataSource = new SingleConnectionDataSource("jdbc:mysql://localhost/testdb", "root", "qkrtmdcks1!", true);
+//        userDao.setDataSource(dataSource);
     }
 
     @Test
