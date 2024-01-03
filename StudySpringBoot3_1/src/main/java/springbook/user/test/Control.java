@@ -16,4 +16,8 @@ public class Control {
     public void soundControl() {
         this.car.sound();
     }
+
+    public void showColor() {
+        System.out.println(this.car.color());
+    }
 }

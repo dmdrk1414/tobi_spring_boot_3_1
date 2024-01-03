@@ -17,5 +17,6 @@ public class CarTest {
     public void testSound() {
 
         control.soundControl();
+        control.showColor();
     }
 }
