@@ -75,7 +75,8 @@ public class UserDao {
         try {
             // 예외가 발생할 가능성이 있는 코드를
             // 모두 try 블록으로 묶어준다.
-            preparedStatement = makeStatement(connection);
+            StatementStrategy strategy = new DeleteAllStatement();
+            preparedStatement = strategy.makePreparedStatement(connection);
             preparedStatement.execute();
         } catch (SQLException e) {
             // 예외가 발생했을때 부가적인 작업을 해줄 수 있도록 catch 블록을 둔다.
@@ -145,15 +146,5 @@ public class UserDao {
                 }
             }
         }
-    }
-
-    /**
-     * 변하는 부분에 따른 리팩토링
-     * 분리된 메소드는 DAO 로직마다 새롭게 만들어서 확장돼야 하는 부분이다.
-     */
-    private PreparedStatement makeStatement(Connection connection) throws SQLException {
-        PreparedStatement preparedStatement;
-        preparedStatement = connection.prepareStatement("DELETE FROM users");
-        return preparedStatement;
     }
 }
