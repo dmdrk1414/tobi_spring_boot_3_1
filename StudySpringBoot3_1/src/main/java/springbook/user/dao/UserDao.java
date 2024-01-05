@@ -73,15 +73,16 @@ public class UserDao {
     }
 
     public void deleteAll() throws SQLException {
-        // 선정한 전략 클래스의 오브젝트 생성
-        StatementStrategy strategy = new DeleteAllStatement();
+        executeSql("DELETE FROM users");
+    }
 
+    private void executeSql(final String query) throws SQLException {
         // 컨텍스트 호출, 전략 오브젝트 전달
         this.jdbcContext.workWithStatementStrategy(
                 new StatementStrategy() {
                     @Override
                     public PreparedStatement makePreparedStatement(Connection connection) throws SQLException {
-                        PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM users");
+                        PreparedStatement preparedStatement = connection.prepareStatement(query);
                         return preparedStatement;
                     }
                 }
