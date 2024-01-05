@@ -13,12 +13,11 @@ public class UserDao {
     private JdbcContext jdbcContext;
 
     public void setDataSource(DataSource dataSource) {
+        this.jdbcContext = new JdbcContext(); // jdbcContext 생성(ioC)
+        this.jdbcContext.setDataSource(dataSource); // 의존 오브젝트 주입(DI)
         this.dataSource = dataSource;
     }
 
-    public void setJdbcContext(JdbcContext jdbcContext) {
-        this.jdbcContext = jdbcContext;
-    }
 
     public void add(final User user) throws SQLException, ClassNotFoundException {
         this.jdbcContext.workWithStatementStrategy(
