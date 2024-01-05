@@ -10,27 +10,33 @@ import java.sql.*;
 @NoArgsConstructor // 빈을 사용하기 위해 기본 생성자 생성
 public class UserDao {
     private DataSource dataSource;
+    private JdbcContext jdbcContext;
 
     public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
+    public void setJdbcContext(JdbcContext jdbcContext) {
+        this.jdbcContext = jdbcContext;
+    }
+
     public void add(final User user) throws SQLException, ClassNotFoundException {
-        StatementStrategy strategy = new StatementStrategy() {
-            @Override
-            public PreparedStatement makePreparedStatement(Connection connection) throws SQLException {
-                PreparedStatement preparedStatement = connection.prepareStatement(
-                        "INSERT INTO users(id, name, password) VALUES (?, ?, ?)"
-                );
+        this.jdbcContext.workWithStatementStrategy(
+                new StatementStrategy() {
+                    @Override
+                    public PreparedStatement makePreparedStatement(Connection connection) throws SQLException {
+                        PreparedStatement preparedStatement = connection.prepareStatement(
+                                "INSERT INTO users(id, name, password) VALUES (?, ?, ?)"
+                        );
 
-                preparedStatement.setString(1, user.getId());
-                preparedStatement.setString(2, user.getName());
-                preparedStatement.setString(3, user.getPassword());
+                        preparedStatement.setString(1, user.getId());
+                        preparedStatement.setString(2, user.getName());
+                        preparedStatement.setString(3, user.getPassword());
 
-                return preparedStatement;
-            }
-        };
-        jdbcContextWithStatementStrategy(strategy);
+                        return preparedStatement;
+                    }
+                }
+        );
     }
 
     public User get(String id) throws ClassNotFoundException, SQLException {
@@ -72,7 +78,15 @@ public class UserDao {
         StatementStrategy strategy = new DeleteAllStatement();
 
         // 컨텍스트 호출, 전략 오브젝트 전달
-        jdbcContextWithStatementStrategy(strategy);
+        this.jdbcContext.workWithStatementStrategy(
+                new StatementStrategy() {
+                    @Override
+                    public PreparedStatement makePreparedStatement(Connection connection) throws SQLException {
+                        PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM users");
+                        return preparedStatement;
+                    }
+                }
+        );
     }
 
     public int getCount() throws SQLException {
@@ -99,42 +113,6 @@ public class UserDao {
                     // 그렇지 않으면 Connection을 close() 하지 못하고 메소드를 빠져날갈 수 있다.
                 }
             }
-            if (preparedStatement != null) {
-                try {
-                    preparedStatement.close();
-                } catch (SQLException e) {
-                    // ps.close() 메소드에서도 SQLException 이 발생할 수 있기 때문에
-                    // 이를 잡아줘야 한다.
-                    // 그렇지 않으면 Connection을 close() 하지 못하고 메소드를 빠져날갈 수 있다.
-                }
-            }
-
-            if (connection != null) {
-                try {
-                    // Connection 반환
-                    connection.close();
-                } catch (SQLException e) {
-                }
-            }
-        }
-    }
-
-    public void jdbcContextWithStatementStrategy(StatementStrategy strategy) throws SQLException {
-        Connection connection = null;
-
-        PreparedStatement preparedStatement = null;
-        try {
-            connection = dataSource.getConnection();
-            // 예외가 발생할 가능성이 있는 코드를
-            // 모두 try 블록으로 묶어준다.
-            preparedStatement = strategy.makePreparedStatement(connection);
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            // 예외가 발생했을때 부가적인 작업을 해줄 수 있도록 catch 블록을 둔다.
-            // 아직은 예외를 다시 메소드 밖으로 던지는 것밖에 없다.
-            throw e;
-        } finally {
-            // finally이므로 try 블록에서 예외가 발생했을 때나 안 했을때나 모두 실행된다.
             if (preparedStatement != null) {
                 try {
                     preparedStatement.close();
