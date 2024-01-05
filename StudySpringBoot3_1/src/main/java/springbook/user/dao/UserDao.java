@@ -73,21 +73,9 @@ public class UserDao {
     }
 
     public void deleteAll() throws SQLException {
-        executeSql("DELETE FROM users");
+        this.jdbcContext.executeSql("DELETE FROM users");
     }
 
-    private void executeSql(final String query) throws SQLException {
-        // 컨텍스트 호출, 전략 오브젝트 전달
-        this.jdbcContext.workWithStatementStrategy(
-                new StatementStrategy() {
-                    @Override
-                    public PreparedStatement makePreparedStatement(Connection connection) throws SQLException {
-                        PreparedStatement preparedStatement = connection.prepareStatement(query);
-                        return preparedStatement;
-                    }
-                }
-        );
-    }
 
     public int getCount() throws SQLException {
         Connection connection = null;
