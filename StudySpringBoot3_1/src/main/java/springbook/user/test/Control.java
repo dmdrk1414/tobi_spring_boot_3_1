@@ -20,4 +20,8 @@ public class Control {
     public void showColor() {
         System.out.println(this.car.color());
     }
+
+    public void showPowerType() {
+        this.car.powerType();
+    }
 }

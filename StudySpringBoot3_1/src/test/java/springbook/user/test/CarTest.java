@@ -18,5 +18,6 @@ public class CarTest {
 
         control.soundControl();
         control.showColor();
+        control.showPowerType();
     }
 }

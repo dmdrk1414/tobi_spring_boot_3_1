@@ -28,4 +28,8 @@ public class Car {
     public String color() {
         return this.color;
     }
+
+    public void powerType() {
+        this.powerUnit.printPowerType();
+    }
 }
