@@ -44,4 +44,22 @@ public class Calculator {
                 };
         return fileReadTemplate(filepath, sumCallback);
     }
+
+    public Integer calcMultiply(String filepath) throws IOException {
+        BufferdReaderCallback sumCallback =
+                new BufferdReaderCallback() {
+                    @Override
+                    public Integer doSomethingWithReader(BufferedReader br) throws IOException {
+                        Integer multiply = 1;
+                        String line = null;
+
+                        while ((line = br.readLine()) != null) {
+                            multiply *= Integer.valueOf(line);
+                        }
+                        return multiply;
+                    }
+                };
+        return fileReadTemplate(filepath, sumCallback);
+
+    }
 }

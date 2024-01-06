@@ -31,4 +31,9 @@ class CalculatorTest {
 
         assertThat(sum).isEqualTo(10);
     }
+
+    @Test
+    public void multiplyOfNumbers() throws IOException {
+        assertThat(calculator.calcMultiply(this.numFilepath)).isEqualTo(24);
+    }
 }
