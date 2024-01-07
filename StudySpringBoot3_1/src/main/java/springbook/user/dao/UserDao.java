@@ -13,6 +13,10 @@ import javax.sql.DataSource;
 import java.sql.*;
 import java.util.List;
 
+// TODO: 1/7/24
+// p275
+// 1. userMapper을 DI용 프로퍼티로 만들고 싶다.
+// 2. sql을 외부에서 가져오고싶다.
 @NoArgsConstructor // 빈을 사용하기 위해 기본 생성자 생성
 public class UserDao {
     private JdbcTemplate jdbcTemplate;
