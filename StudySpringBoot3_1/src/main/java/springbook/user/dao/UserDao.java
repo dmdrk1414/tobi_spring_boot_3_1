@@ -2,6 +2,8 @@ package springbook.user.dao;
 
 import lombok.NoArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import springbook.user.domain.User;
 
 import javax.sql.DataSource;
@@ -10,11 +12,10 @@ import java.sql.*;
 @NoArgsConstructor // 빈을 사용하기 위해 기본 생성자 생성
 public class UserDao {
     private DataSource dataSource;
-    private JdbcContext jdbcContext;
+    private JdbcTemplate jdbcTemplate;
 
     public void setDataSource(DataSource dataSource) {
-        this.jdbcContext = new JdbcContext(); // jdbcContext 생성(ioC)
-        this.jdbcContext.setDataSource(dataSource); // 의존 오브젝트 주입(DI)
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.dataSource = dataSource;
     }
 
@@ -73,7 +74,14 @@ public class UserDao {
     }
 
     public void deleteAll() throws SQLException {
-        this.jdbcContext.executeSql("DELETE FROM users");
+        this.jdbcTemplate.update(
+                new PreparedStatementCreator() {
+                    @Override
+                    public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+                        return con.prepareStatement("DELETE FROM users");
+                    }
+                }
+        );
     }
 
 
