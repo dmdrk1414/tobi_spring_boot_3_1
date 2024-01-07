@@ -32,6 +32,11 @@ public class UserDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
+    /**
+     * 만약 jdbcTemplate을 DI으로 이용해 주입할 생각이면
+     *
+     * @param jdbcTemplate
+     */
     public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
