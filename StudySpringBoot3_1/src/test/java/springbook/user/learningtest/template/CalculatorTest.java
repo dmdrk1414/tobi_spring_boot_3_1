@@ -36,4 +36,10 @@ class CalculatorTest {
     public void multiplyOfNumbers() throws IOException {
         assertThat(calculator.calcMultiply(this.numFilepath)).isEqualTo(24);
     }
+
+    @Test
+    void concatenate() throws IOException {
+        String result = calculator.concatenate(this.numFilepath);
+        assertThat(result).isEqualTo(result);
+    }
 }
