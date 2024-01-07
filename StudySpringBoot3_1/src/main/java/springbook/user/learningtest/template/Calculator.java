@@ -32,7 +32,7 @@ public class Calculator {
 
     public Integer calcSum(String filepath) throws IOException {
 
-        LineCallback sumCallback =
+        LineCallback<Integer> sumCallback =
                 new LineCallback<Integer>() {
                     @Override
                     public Integer doSomethingWithLine(String line, Integer value) {
@@ -43,7 +43,7 @@ public class Calculator {
     }
 
     public Integer calcMultiply(String filepath) throws IOException {
-        LineCallback sumCallback =
+        LineCallback<Integer> sumCallback =
                 new LineCallback<Integer>() {
                     @Override
                     public Integer doSomethingWithLine(String line, Integer value) {
