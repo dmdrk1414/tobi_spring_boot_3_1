@@ -3,10 +3,7 @@ package springbook.user.dao;
 import lombok.NoArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.core.ResultSetExtractor;
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.*;
 import springbook.user.domain.User;
 
 import javax.sql.DataSource;
@@ -15,7 +12,7 @@ import java.util.List;
 
 @NoArgsConstructor // 빈을 사용하기 위해 기본 생성자 생성
 public class UserDao {
-    private JdbcTemplate jdbcTemplate;
+    private JdbcOperations jdbcTemplate;
     private RowMapper<User> userMapper =
             new RowMapper<User>() {
                 @Override
@@ -37,7 +34,9 @@ public class UserDao {
      *
      * @param jdbcTemplate
      */
-    public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+    public void setJdbcTemplate(JdbcOperations jdbcTemplate) {
+        // 만약 DI으로 주입하고 싶다면
+        // JdbcTemplate을 -> JdbcOperations interface을 이용해 구현을 한다.
         this.jdbcTemplate = jdbcTemplate;
     }
 
