@@ -74,14 +74,18 @@ public class UserDao {
     }
 
     public void deleteAll() throws SQLException {
-        this.jdbcTemplate.update(
-                new PreparedStatementCreator() {
-                    @Override
-                    public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-                        return con.prepareStatement("DELETE FROM users");
-                    }
-                }
-        );
+        String sql = "DELETE FROM users";
+        this.jdbcTemplate.update(sql);
+
+        // 콜백 형식의 jdbcTemplate.update 사용방법
+//        this.jdbcTemplate.update(
+//                new PreparedStatementCreator() {
+//                    @Override
+//                    public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+//                        return con.prepareStatement("DELETE FROM users");
+//                    }
+//                }
+//        );
     }
 
 
