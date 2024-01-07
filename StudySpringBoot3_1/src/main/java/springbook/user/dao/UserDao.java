@@ -21,22 +21,8 @@ public class UserDao {
 
 
     public void add(final User user) throws SQLException, ClassNotFoundException {
-        this.jdbcContext.workWithStatementStrategy(
-                new StatementStrategy() {
-                    @Override
-                    public PreparedStatement makePreparedStatement(Connection connection) throws SQLException {
-                        PreparedStatement preparedStatement = connection.prepareStatement(
-                                "INSERT INTO users(id, name, password) VALUES (?, ?, ?)"
-                        );
-
-                        preparedStatement.setString(1, user.getId());
-                        preparedStatement.setString(2, user.getName());
-                        preparedStatement.setString(3, user.getPassword());
-
-                        return preparedStatement;
-                    }
-                }
-        );
+        String sql = "INSERT  INTO users(id, name, password) VALUES (?, ?, ?)";
+        this.jdbcTemplate.update(sql, user.getId(), user.getName(), user.getPassword());
     }
 
     public User get(String id) throws ClassNotFoundException, SQLException {
