@@ -11,6 +11,7 @@ import springbook.user.domain.User;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.util.List;
 
 @NoArgsConstructor // 빈을 사용하기 위해 기본 생성자 생성
 public class UserDao {
@@ -23,7 +24,7 @@ public class UserDao {
     }
 
 
-    public void add(final User user) throws SQLException, ClassNotFoundException {
+    public void add(final User user) {
         String sql = "INSERT  INTO users(id, name, password) VALUES (?, ?, ?)";
         this.jdbcTemplate.update(sql, user.getId(), user.getName(), user.getPassword());
     }
@@ -47,7 +48,7 @@ public class UserDao {
         );
     }
 
-    public void deleteAll() throws SQLException {
+    public void deleteAll() {
         String sql = "DELETE FROM users";
         this.jdbcTemplate.update(sql);
 
@@ -82,5 +83,21 @@ public class UserDao {
 //                    }
 //                }
 //        );
+    }
+
+    public List<User> getAll() {
+        return this.jdbcTemplate.query("SELECT * FROM users order by id",
+                // query의 리턴 타입은 List<T>이다.
+                // query()는 제네릭 메소드로 타입은 파라미터로 넘기는 RowMapper<T> 콜백 오브젝트에서 결정된다.
+                new RowMapper<User>() {
+                    @Override
+                    public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        User user = new User();
+                        user.setId(rs.getString("id"));
+                        user.setName(rs.getString("name"));
+                        user.setPassword(rs.getString("password"));
+                        return user;
+                    }
+                });
     }
 }

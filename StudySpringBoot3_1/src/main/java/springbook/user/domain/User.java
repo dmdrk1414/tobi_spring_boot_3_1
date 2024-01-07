@@ -2,6 +2,8 @@ package springbook.user.domain;
 
 import lombok.*;
 
+import java.util.List;
+
 @ToString
 @Getter
 @Setter
