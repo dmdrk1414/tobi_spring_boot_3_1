@@ -1,9 +1,11 @@
 package springbook.user.dao;
 
 import lombok.NoArgsConstructor;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import springbook.user.domain.User;
 
 import javax.sql.DataSource;
@@ -76,46 +78,23 @@ public class UserDao {
 
 
     public int getCount() throws SQLException {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        try {
-            connection = dataSource.getConnection();
-
-            preparedStatement = connection.prepareStatement("SELECT count(*) FROM users");
-
-            resultSet = preparedStatement.executeQuery();
-            resultSet.next();
-            return resultSet.getInt(1);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (resultSet != null) {
-                try {
-                    resultSet.close();
-                } catch (SQLException e) {
-                    // ps.close() 메소드에서도 SQLException 이 발생할 수 있기 때문에
-                    // 이를 잡아줘야 한다.
-                    // 그렇지 않으면 Connection을 close() 하지 못하고 메소드를 빠져날갈 수 있다.
-                }
-            }
-            if (preparedStatement != null) {
-                try {
-                    preparedStatement.close();
-                } catch (SQLException e) {
-                    // ps.close() 메소드에서도 SQLException 이 발생할 수 있기 때문에
-                    // 이를 잡아줘야 한다.
-                    // 그렇지 않으면 Connection을 close() 하지 못하고 메소드를 빠져날갈 수 있다.
-                }
-            }
-
-            if (connection != null) {
-                try {
-                    // Connection 반환
-                    connection.close();
-                } catch (SQLException e) {
-                }
-            }
-        }
+        String sql = "SELECT  COUNT(*) FROM users";
+        return this.jdbcTemplate.queryForObject(sql, Integer.class);
+//        return this.jdbcTemplate.query(
+//                new PreparedStatementCreator() {
+//                    @Override
+//                    public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+//                        return con.prepareStatement("SELECT  COUNT(*) FROM users");
+//                    }
+//                },
+//                new ResultSetExtractor<Integer>() {
+//                    // ResultSet에서 추출하는 값은 다양하기 때문에 타입을 지정해준다.
+//                    @Override
+//                    public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {
+//                        rs.next();
+//                        return rs.getInt(1);
+//                    }
+//                }
+//        );
     }
 }
