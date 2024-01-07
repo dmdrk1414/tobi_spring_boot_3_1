@@ -16,6 +16,17 @@ import java.util.List;
 @NoArgsConstructor // 빈을 사용하기 위해 기본 생성자 생성
 public class UserDao {
     private JdbcTemplate jdbcTemplate;
+    private RowMapper<User> userMapper =
+            new RowMapper<User>() {
+                @Override
+                public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+                    User user = new User();
+                    user.setId(rs.getString("id"));
+                    user.setName(rs.getString("name"));
+                    user.setPassword(rs.getString("password"));
+                    return user;
+                }
+            };
 
     public void setDataSource(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
@@ -36,17 +47,7 @@ public class UserDao {
         return this.jdbcTemplate.queryForObject(sql,
                 // sql에 바인딩할 파라미터 값, 가변인자 대신 배열을 사용한다.
                 new Object[]{id},
-                new RowMapper<User>() {
-                    @Override
-                    public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        // ResultSet 한 로우의 결과를 오브젝트에 매핑해주는 RowMapper 콜백
-                        User user = new User();
-                        user.setId(rs.getString("id"));
-                        user.setName(rs.getString("name"));
-                        user.setPassword(rs.getString("password"));
-                        return user;
-                    }
-                }
+                this.userMapper
         );
     }
 
@@ -91,15 +92,6 @@ public class UserDao {
         return this.jdbcTemplate.query("SELECT * FROM users order by id",
                 // query의 리턴 타입은 List<T>이다.
                 // query()는 제네릭 메소드로 타입은 파라미터로 넘기는 RowMapper<T> 콜백 오브젝트에서 결정된다.
-                new RowMapper<User>() {
-                    @Override
-                    public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        User user = new User();
-                        user.setId(rs.getString("id"));
-                        user.setName(rs.getString("name"));
-                        user.setPassword(rs.getString("password"));
-                        return user;
-                    }
-                });
+                this.userMapper);
     }
 }
