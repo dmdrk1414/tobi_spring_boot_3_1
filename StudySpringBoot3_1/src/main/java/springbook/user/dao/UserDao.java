@@ -15,12 +15,10 @@ import java.util.List;
 
 @NoArgsConstructor // 빈을 사용하기 위해 기본 생성자 생성
 public class UserDao {
-    private DataSource dataSource;
     private JdbcTemplate jdbcTemplate;
 
     public void setDataSource(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.dataSource = dataSource;
     }
 
 
