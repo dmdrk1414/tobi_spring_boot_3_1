@@ -21,6 +21,10 @@ public class UserDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
+    public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
 
     public void add(final User user) {
         String sql = "INSERT  INTO users(id, name, password) VALUES (?, ?, ?)";
