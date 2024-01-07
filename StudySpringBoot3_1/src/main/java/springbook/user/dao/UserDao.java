@@ -6,6 +6,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.RowMapper;
 import springbook.user.domain.User;
 
 import javax.sql.DataSource;
@@ -28,37 +29,22 @@ public class UserDao {
     }
 
     public User get(String id) throws ClassNotFoundException, SQLException {
-        Connection connection = dataSource.getConnection();
-
-        // SQL을 담은 Statement(또는 PreparedStatement)을 만든다.
-        PreparedStatement preparedStatement = connection.prepareStatement(
-                "SELECT * FROM users WHERE id = ?"
+        String sql = "SELECT * FROM users WHERE id = ?";
+        return this.jdbcTemplate.queryForObject(sql,
+                // sql에 바인딩할 파라미터 값, 가변인자 대신 배열을 사용한다.
+                new Object[]{id},
+                new RowMapper<User>() {
+                    @Override
+                    public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        // ResultSet 한 로우의 결과를 오브젝트에 매핑해주는 RowMapper 콜백
+                        User user = new User();
+                        user.setId(rs.getString("id"));
+                        user.setName(rs.getString("name"));
+                        user.setPassword(rs.getString("password"));
+                        return user;
+                    }
+                }
         );
-        preparedStatement.setString(1, id);
-
-        // 만들어진 Statement를 실행한다.
-        ResultSet resultSet = preparedStatement.executeQuery();
-
-        User user = null;
-
-        // resultSet의 다음을 찾는다 (초기에는 null이다.)
-        if (resultSet.next()) {
-            String searchId = resultSet.getString("id");
-            String searchName = resultSet.getString("name");
-            String searchPassword = resultSet.getString("password");
-            user = new User(searchId, searchName, searchPassword);
-        }
-
-        // 작업 중에 생성된 Connectin, Statement, ResultSet 같은 리소스는 작업을 마친 후 반드기 닫아준다.
-        resultSet.close();
-        preparedStatement.close();
-        connection.close();
-
-        if (user == null) {
-            throw new EmptyResultDataAccessException(1);
-        }
-
-        return user;
     }
 
     public void deleteAll() throws SQLException {
