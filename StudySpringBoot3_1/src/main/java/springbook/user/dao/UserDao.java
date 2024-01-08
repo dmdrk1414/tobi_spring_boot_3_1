@@ -1,5 +1,6 @@
 package springbook.user.dao;
 
+import com.mysql.cj.exceptions.MysqlErrorNumbers;
 import lombok.NoArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -8,6 +9,7 @@ import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import springbook.user.domain.User;
+import springbook.user.exception.DuplicateUserIdException;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -48,9 +50,18 @@ public class UserDao {
     }
 
 
-    public void add(final User user) {
-        String sql = "INSERT  INTO users(id, name, password) VALUES (?, ?, ?)";
-        this.jdbcTemplate.update(sql, user.getId(), user.getName(), user.getPassword());
+    public void add(final User user) throws DuplicateUserIdException {
+        try {
+            String sql = "INSERT  INTO users(id, name, password) VALUES (?, ?, ?)";
+            this.jdbcTemplate.update(sql, user.getId(), user.getName(), user.getPassword());
+        } catch (SQLException e) {
+            // SQLException은 Jdbctemplate update에는 사용할 수 없다.
+            if (e.getErrorCode() == MysqlErrorNumbers.ER_DUP_ENTRY) {
+                throw new DuplicateUserIdException(e);
+            } else {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     public User get(String id) throws ClassNotFoundException, SQLException {
