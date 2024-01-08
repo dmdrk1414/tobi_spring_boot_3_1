@@ -3,6 +3,7 @@ package springbook.user.dao;
 import com.mysql.cj.exceptions.MysqlErrorNumbers;
 import lombok.NoArgsConstructor;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -54,13 +55,9 @@ public class UserDao {
         try {
             String sql = "INSERT  INTO users(id, name, password) VALUES (?, ?, ?)";
             this.jdbcTemplate.update(sql, user.getId(), user.getName(), user.getPassword());
-        } catch (SQLException e) {
-            // SQLException은 Jdbctemplate update에는 사용할 수 없다.
-            if (e.getErrorCode() == MysqlErrorNumbers.ER_DUP_ENTRY) {
-                throw new DuplicateUserIdException(e);
-            } else {
-                throw new RuntimeException(e);
-            }
+        } catch (DuplicateKeyException e) {
+            // DataAccessException의 상속을 받는 DuplicateKeyException을 try으로 처리한다.
+            throw new DuplicateUserIdException(e);
         }
     }
 
