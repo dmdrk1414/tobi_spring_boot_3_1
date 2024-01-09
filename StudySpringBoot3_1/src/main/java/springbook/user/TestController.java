@@ -131,7 +131,7 @@ public class TestController {
         // CountingConnectionMaker 빈을 가져온다.
         AnnotationConfigApplicationContext context =
                 new AnnotationConfigApplicationContext(CountingDaoFactory.class);
-        UserDao dUserDao = context.getBean("countUserDao", UserDao.class);
+        UserDaoJdbc dUserDao = context.getBean("countUserDao", UserDaoJdbc.class);
 
         User user_D = new User("DUser", "박승찬", "married");
 
@@ -170,7 +170,7 @@ public class TestController {
         // 관련 class을 이용한 content 이용 방법 보통 쓰지 않는다.
 //        ClassPathXmlApplicationContext context =
 //                new ClassPathXmlApplicationContext("/applicationContext.xml");
-        UserDao dUserDao = context.getBean("userDao", UserDao.class);
+        UserDaoJdbc dUserDao = context.getBean("userDao", UserDaoJdbc.class);
 
         User user_D = new User("DUser", "박승찬", "married");
 
@@ -195,7 +195,7 @@ public class TestController {
         // 관련 class을 이용한 content 이용 방법 보통 쓰지 않는다.
 //        ClassPathXmlApplicationContext context =
 //                new ClassPathXmlApplicationContext("/applicationContext.xml");
-        UserDao dUserDao = context.getBean("userDao", UserDao.class);
+        UserDaoJdbc dUserDao = context.getBean("userDao", UserDaoJdbc.class);
 
         User user_D = new User("DUser", "박승찬", "married");
 

@@ -15,11 +15,11 @@
         <property name="username" value="root"/>
         <property name="password" value="qkrtmdcks1!"/>
     </bean>
-    <bean id="userDao" class="springbook.user.dao.UserDao">
+    <bean id="userDao" class="springbook.user.dao.UserDaoJdbc">
         <property name="dataSource" ref="dataSource"/>
     </bean>
 
-    <bean id="userDao2" class="springbook.user.dao.UserDao">
+    <bean id="userDao2" class="springbook.user.dao.UserDaoJdbc">
         <property name="dataSource" ref="dataSource"/>
     </bean>
 

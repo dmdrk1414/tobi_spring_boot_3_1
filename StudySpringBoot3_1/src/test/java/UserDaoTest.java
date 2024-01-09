@@ -4,11 +4,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.datasource.SingleConnectionDataSource;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import springbook.user.dao.UserDao;
+import springbook.user.dao.UserDaoJdbc;
 import springbook.user.domain.User;
 
 import javax.sql.DataSource;
@@ -27,9 +25,9 @@ public class UserDaoTest {
     //      타입으로 가져올 빈 하나를 선택할 수 없는 경우에는 변수의 이름과 같은 이름의 빈이 있는지 확인
     //
     @Autowired
-    private UserDao userDao;
+    private UserDaoJdbc userDao;
     @Autowired
-    private UserDao userDao2;
+    private UserDaoJdbc userDao2;
     @Autowired
     private DataSource source;
     private User user1;
