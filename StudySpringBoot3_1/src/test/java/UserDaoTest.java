@@ -3,7 +3,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator;
+import org.springframework.jdbc.support.SQLExceptionTranslator;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import springbook.user.dao.UserDaoJdbc;
@@ -29,7 +32,7 @@ public class UserDaoTest {
     @Autowired
     private UserDaoJdbc userDao2;
     @Autowired
-    private DataSource source;
+    private DataSource dataSource;
     private User user1;
     private User user2;
     private User user3;
@@ -131,5 +134,21 @@ public class UserDaoTest {
         assertThat(user1.getId()).isEqualTo(user2.getId());
         assertThat(user1.getName()).isEqualTo(user2.getName());
         assertThat(user1.getPassword()).isEqualTo(user2.getPassword());
+    }
+
+    @Test
+    public void sqlExceptionTranslate() {
+        userDao.deleteAll();
+
+        try {
+            userDao.add(user1);
+            userDao.add(user1);
+        } catch (DuplicateKeyException ex) {
+            SQLException sqlException = (SQLException) ex.getRootCause();
+            SQLExceptionTranslator set = new SQLErrorCodeSQLExceptionTranslator(this.dataSource);
+
+            assertThat(set.translate(null, null, sqlException))
+                    .isEqualTo(DuplicateKeyException.class);
+        }
     }
 }
