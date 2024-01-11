@@ -1,5 +1,6 @@
 package springbook.user;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,7 +8,7 @@ public class Main {
     public static void main(String[] args) {
 
         Solution solution = new Solution();
-        String[] frends = new String[]{"muzi", "ryan", "frodo", "neo"};
+        String[] friends = new String[]{"muzi", "ryan", "frodo", "neo"};
         String[] gifts = new String[]{
                 "muzi frodo",
                 "muzi frodo",
@@ -17,7 +18,7 @@ public class Main {
                 "frodo muzi",
                 "frodo ryan",
                 "neo muzi"};
-        solution.solution(frends, gifts);
+        solution.solution(friends, gifts);
     }
 }
 
@@ -37,74 +38,54 @@ public class Main {
 class Solution {
     public int solution(String[] friends, String[] gifts) {
         int answer = 0;
-        Integer friendLen = friends.length;
-        Map<String, Integer> dic = new HashMap<>(); // 친구들의 이름은 index으로 구분
-        int[] giftDegree = new int[friendLen];
-        int[][] giftGraph = new int[friendLen][friendLen];
+        int sizeOfFriends = friends.length;
+        Map<String, Integer> nameDic = new HashMap<>();
+        int[] giftState = new int[sizeOfFriends];
+        int[][] giveAndTakeGraph = new int[sizeOfFriends][sizeOfFriends];
 
-        for (int i = 0; i < friendLen; i++) {
-            dic.put(friends[i], i);
+        // nameDic 설정
+        for (int i = 0; i < sizeOfFriends; i++) {
+            String friend = friends[i];
+            nameDic.put(friend, i);
         }
 
+        // giftState 설정
         for (String gift : gifts) {
-            String[] giftName = gift.split(" ");
-            giftDegree[dic.get(giftName[0])]++;
-            giftDegree[dic.get(giftName[1])]--;
-            giftGraph[dic.get(giftName[0])][dic.get(giftName[1])]++;
-        }
-        for (int i = 0; i < friendLen; i++) {
-            for (int j = 0; j < friendLen; j++) {
-                System.out.print(giftGraph[i][j] + " ");
-            }
-            System.out.println();
+            String[] giftSplit = gift.split(" ");
+            String give = giftSplit[0];
+            String take = giftSplit[1];
+
+            Integer giveFriendIndex = nameDic.get(give);
+            Integer takeFriendIndex = nameDic.get(take);
+            giftState[giveFriendIndex]++;
+            giftState[takeFriendIndex]--;
+            giveAndTakeGraph[giveFriendIndex][takeFriendIndex]++;
         }
 
-        // 1. if A가 B에게 선물을 5번, B가 A에게 선물 3번이면
-        // 1.1  B가 A한테 선물 하나준다.
-
-        // 2. 선물을 주고받은 기록이 없거나, 같다면
-        // 2.1  선물 지수가 작은 사람이 -> 큰사람 한테
-        // 2.2  선물 지수가 같다면 -> 다음달 선물이 없다.
-        // 선물 지수 : 친구들에게 준 선물의 수 - 선물을 받은 수
-        // ex) A가 준 선물이 3개 - 받은 선물 10 = -7의 지수이다.
-        // 	   B가 준 선물이 3개 - 받은 선물 2 = 1이다.
-        //	   A -> B에게 선물
-        for (int i = 0; i < friendLen; i++) {
+        for (int giveIndex = 0; giveIndex < sizeOfFriends; giveIndex++) {
             int num = 0;
-            for (int j = 0; j < friendLen; j++) {
-                if (i == j) {
+            for (int takeIndex = 0; takeIndex < sizeOfFriends; takeIndex++) {
+
+                if (giveIndex == takeIndex) {
                     continue;
                 }
 
-                if (giftGraph[i][j] > giftGraph[j][i]) {
+                if (giveAndTakeGraph[giveIndex][takeIndex] > giveAndTakeGraph[takeIndex][giveIndex]) {
                     num++;
                 }
 
-                if (giftGraph[i][j] == giftGraph[j][i] && giftDegree[i] > giftDegree[j]) {
+                if (giveAndTakeGraph[giveIndex][takeIndex] == giveAndTakeGraph[takeIndex][giveIndex] &&
+                        giftState[giveIndex] > giftState[takeIndex]
+                ) {
                     num++;
                 }
 
-            }
-
-            if (answer < num) {
-                answer = num;
+                if (answer < num) {
+                    answer = num;
+                }
             }
         }
 
         return answer;
-    }
-
-    public Boolean isContain(Map<String, Integer> map, String target) {
-        for (Map.Entry<String, Integer> entry : map.entrySet()) {
-            String item = entry.getKey();
-            if (item.contains(target)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public void println(Object object) {
-        System.out.println(object);
     }
 }
