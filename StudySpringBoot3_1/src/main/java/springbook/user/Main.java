@@ -1,91 +1,97 @@
 package springbook.user;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Main {
+    /*
+1.  1~n 분류되는 개인정보 n개
+1.1 각 약관마다 개인정보 보관 유효기간이 정해져 있다.
+1.2 당신은 각 개인정보가 어떤 약관으로 수집됐는지 알고 있습니다.
+1.3 수집된 개인정보는 유효기간 전까지만 보관 가능하며,
+1.4 유효기간이 지났다면 반드시 파기해야 합니다.
+
+    예를 들어, A라는 약관의 유효기간이 12 달이고, 2021년 1월 5일에 수집된 개인정보가 A약관으로 수집되었다면 해당 개인정보는 2022년 1월 4일까지 보관 가능하며 2022년 1월 5일부터 파기해야 할 개인정보입니다.
+    1. 유효기간 12달
+    2. 2021년 1월 5일에 수집
+    3. 2022년 1월 4일까지 보관 가능
+    4. 2022년 1월 5일에 파기
+    당신은 오늘 날짜로 파기해야 할 개인정보 번호들을 구하려 합니다.
+
+    모든 달은 28일까지 있다고 가정합니다.
+    if 모든 달은 28일까지 있다.
+
+    다음은 오늘 날짜가 2022.05.19일 때의 예시입니다.
+    */
+
     public static void main(String[] args) {
+        String today = "2022.05.19";
+        String[] terms = {"A 6", "B 12", "C 3"};
+        String[] privacies = {"2021.05.02 A", "2021.07.01 B", "2022.02.19 C", "2022.02.20 C"};
 
         Solution solution = new Solution();
-        String[] friends = new String[]{"muzi", "ryan", "frodo", "neo"};
-        String[] gifts = new String[]{
-                "muzi frodo",
-                "muzi frodo",
-                "ryan muzi",
-                "ryan muzi",
-                "ryan muzi",
-                "frodo muzi",
-                "frodo ryan",
-                "neo muzi"};
-        solution.solution(friends, gifts);
+        solution.solution(today, terms, privacies);
     }
 }
 
-/*
-* friends 친구들의 이름을 담은 1차원 문자열 배열
- 	(2 ≤ friends의 길이 = 친구들의 수 ≤ 50)
- 	friends의 원소는 친구의 이름을 의미하는 알파벳 소문자로 이루어진 길이가 10 이하인 문자열입니다.
- 	이름이 같은 친구는 없습니다.
-* gifts 이번 달까지 친구들이 주고받은 선물 기록을 담은 1차원 문자열 배열
-	1 ≤ gifts의 길이 ≤ 10,000
-    gifts의 원소는 "A B"형태의 문자열입니다.
-    A는 선물을 준 친구의 이름을 B는 선물을 받은 친구의 이름을 의미하며 공백 하나로 구분됩니다.
-    A와 B는 friends의 원소이며 A와 B가 같은 이름인 경우는 존재하지 않습니다.
-* gifts_len 배열 gifts의 길이입니다.
-* return 다음달에 가장 많은 선물을 받는 친구가 받을 선물의 수
-*/
 class Solution {
-    public int solution(String[] friends, String[] gifts) {
-        int answer = 0;
-        int sizeOfFriends = friends.length;
-        Map<String, Integer> nameDic = new HashMap<>();
-        int[] giftState = new int[sizeOfFriends];
-        int[][] giveAndTakeGraph = new int[sizeOfFriends][sizeOfFriends];
+    public int[] solution(String today, String[] terms, String[] privacies) {
+        Map<String, Integer> termDic = new LinkedHashMap<>();
+        List<Integer> anwerList = new ArrayList<>();
+        int todayInt = Integer.parseInt(today.replace(".", ""));
 
-        // nameDic 설정
-        for (int i = 0; i < sizeOfFriends; i++) {
-            String friend = friends[i];
-            nameDic.put(friend, i);
+        for (String term : terms) {
+            String[] termArr = term.split(" ");
+            String type = termArr[0];
+            Integer duti = Integer.valueOf(termArr[1]);
+            // {"A 6", "B 12", "C 3"};
+            termDic.put(type, duti);
         }
 
-        // giftState 설정
-        for (String gift : gifts) {
-            String[] giftSplit = gift.split(" ");
-            String give = giftSplit[0];
-            String take = giftSplit[1];
 
-            Integer giveFriendIndex = nameDic.get(give);
-            Integer takeFriendIndex = nameDic.get(take);
-            giftState[giveFriendIndex]++;
-            giftState[takeFriendIndex]--;
-            giveAndTakeGraph[giveFriendIndex][takeFriendIndex]++;
-        }
+        for (int i = 0; i < privacies.length; i++) {
+            String[] privacieTallArr = privacies[i].split(" ");
+            String[] privacieArr = privacieTallArr[0].split("\\.");
+            String type = privacieTallArr[1];
+            int yearPrivacie = Integer.parseInt(privacieArr[0]);
+            int monthPrivacie = Integer.parseInt(privacieArr[1]);
+            int dayPrivacie = Integer.parseInt(privacieArr[2]);
 
-        for (int giveIndex = 0; giveIndex < sizeOfFriends; giveIndex++) {
-            int num = 0;
-            for (int takeIndex = 0; takeIndex < sizeOfFriends; takeIndex++) {
+            monthPrivacie = monthPrivacie + termDic.get(type);
+            dayPrivacie = dayPrivacie - 1;
 
-                if (giveIndex == takeIndex) {
-                    continue;
-                }
-
-                if (giveAndTakeGraph[giveIndex][takeIndex] > giveAndTakeGraph[takeIndex][giveIndex]) {
-                    num++;
-                }
-
-                if (giveAndTakeGraph[giveIndex][takeIndex] == giveAndTakeGraph[takeIndex][giveIndex] &&
-                        giftState[giveIndex] > giftState[takeIndex]
-                ) {
-                    num++;
-                }
-
-                if (answer < num) {
-                    answer = num;
-                }
+            if (dayPrivacie == 0) {
+                monthPrivacie -= 1;
+                dayPrivacie += 28;
             }
-        }
 
+            if (monthPrivacie > 12) {
+                yearPrivacie += (monthPrivacie / 12);
+                monthPrivacie -= 12 * (monthPrivacie / 12);
+            }
+
+            if (monthPrivacie == 0) {
+                yearPrivacie -= 1;
+                monthPrivacie = 12;
+            }
+
+            int privacieInt = yearPrivacie * 10000 + monthPrivacie * 100 + dayPrivacie;
+
+            System.out.println("todayInt = " + todayInt);
+            System.out.println("privacieInt = " + privacieInt);
+            if (privacieInt < todayInt) {
+                anwerList.add(i);
+
+                System.out.println(i);
+            }
+
+            System.out.println();
+        }
+        int[] answer = new int[anwerList.size()];
+
+        for (int j = 0; j < anwerList.size(); j++) {
+            answer[j] = anwerList.get(j) + 1;
+        }
+        System.out.println("Arrays.toString(answer) = " + Arrays.toString(answer));
         return answer;
     }
 }
