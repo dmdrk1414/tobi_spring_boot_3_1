@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-    <!--p131
-    CountingDaoFactory#countConnectionMaker
-    id: @Bean 이 있는 메서드 이름
-    class: 리턴을 하는 클래스 패키지 명
-    property: 프로퍼티 이름
-    ref: 주입할 오브젝트를 정의한 빈의 ID.
-    -->
-    <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
-        <property name="driverClass" value="com.mysql.jdbc.Driver"/>
-        <property name="url" value="jdbc:mysql://localhost/testdb?characterEncoding=UTF-8"/>
-        <property name="username" value="root"/>
-        <property name="password" value="qkrtmdcks1!"/>
-    </bean>
-    <bean id="dao" class="springbook.user.dao.UserDaoJdbc">
-        <property name="dataSource" ref="dataSource"/>
-    </bean>
+  xmlns="http://www.springframework.org/schema/beans"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+  <!--p131
+  CountingDaoFactory#countConnectionMaker
+  id: @Bean 이 있는 메서드 이름
+  class: 리턴을 하는 클래스 패키지 명
+  property: 프로퍼티 이름
+  ref: 주입할 오브젝트를 정의한 빈의 ID.
+  -->
+  <bean class="org.springframework.jdbc.datasource.SimpleDriverDataSource" id="dataSource">
+    <property name="driverClass" value="com.mysql.cj.jdbc.Driver"/>
+    <property name="url" value="jdbc:mysql://localhost/testdb?characterEncoding=UTF-8"/>
+    <property name="username" value="root"/>
+    <property name="password" value="qkrtmdcks1!"/>
+  </bean>
+  <bean class="springbook.user.dao.UserDaoJdbc" id="dao">
+    <property name="dataSource" ref="dataSource"/>
+  </bean>
 
 </beans>

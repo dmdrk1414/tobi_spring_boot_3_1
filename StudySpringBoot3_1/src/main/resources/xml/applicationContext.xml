@@ -10,7 +10,7 @@
   ref: 주입할 오브젝트를 정의한 빈의 ID.
   -->
   <bean class="org.springframework.jdbc.datasource.SimpleDriverDataSource" id="dataSource">
-    <property name="driverClass" value="com.mysql.jdbc.Driver"/>
+    <property name="driverClass" value="com.mysql.cj.jdbc.Driver"/>
     <property name="url" value="jdbc:mysql://localhost/springbook?characterEncoding=UTF-8"/>
     <property name="username" value="root"/>
     <property name="password" value="qkrtmdcks1!"/>
