@@ -51,6 +51,23 @@ public class UserDaoTest {
   }
 
   @Test
+  public void update() {
+    dao.deleteAll();
+
+    dao.add(user1);
+
+    user1.setName("오민규");
+    user1.setPassword("spring06");
+    user1.setLevel(Level.GOLD);
+    user1.setLogin(1000);
+    user1.setRecommend(999);
+    dao.update(user1);
+
+    User user1Update = dao.get(user1.getId());
+    checkSameUser(user1, user1Update);
+  }
+
+  @Test
   public void addAndGet() throws Exception {
     // given
     // 테스트를 위한 deleteAll 추가

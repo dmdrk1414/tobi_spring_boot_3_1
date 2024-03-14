@@ -114,4 +114,13 @@ public class UserDaoJdbc implements UserDao {
         // query()는 제네릭 메소드로 타입은 파라미터로 넘기는 RowMapper<T> 콜백 오브젝트에서 결정된다.
         this.userMapper);
   }
+
+  public void update(final User user) {
+    this.jdbcTemplate.update(
+        "update users set name = ?, password = ?, level = ?, login = ?,"
+            + "recommend = ? where id = ?", user.getName(), user.getPassword(),
+        user.getLevel().intValue(), user.getLogin(), user.getRecommend(),
+        user.getId()
+    );
+  }
 }
