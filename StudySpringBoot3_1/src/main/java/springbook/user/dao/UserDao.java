@@ -5,13 +5,14 @@ import springbook.user.domain.User;
 import java.util.List;
 
 public interface UserDao {
-    void add(User user);
 
-    User get(String id);
+  void add(User user);
 
-    List<User> getAll();
+  User get(String id);
 
-    void deleteAll();
+  List<User> getAll();
 
-    int getCount();
+  void deleteAll();
+
+  int getCount();
 }

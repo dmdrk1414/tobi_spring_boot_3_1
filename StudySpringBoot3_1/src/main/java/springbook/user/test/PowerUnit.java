@@ -1,6 +1,7 @@
 package springbook.user.test;
 
 public interface PowerUnit {
-    public void printPowerType();
+
+  public void printPowerType();
 
 }

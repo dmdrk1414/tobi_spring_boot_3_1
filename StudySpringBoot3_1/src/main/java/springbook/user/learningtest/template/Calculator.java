@@ -5,62 +5,64 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class Calculator {
-    public <T> T lineReadTemplate(String filepath, LineCallback<T> callback, T initVal) throws IOException {
-        BufferedReader br = null;
+
+  public <T> T lineReadTemplate(String filepath, LineCallback<T> callback, T initVal)
+      throws IOException {
+    BufferedReader br = null;
+    try {
+      br = new BufferedReader(new FileReader(filepath));
+      T res = initVal;
+      String line = null;
+      while ((line = br.readLine()) != null) {
+        res = callback.doSomethingWithLine(line, res);
+      }
+      return res;
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    } finally {
+      if (br != null) {
+        // BufferedReader 오브젝트가 생성되기 전에 예외가 발생할 수도있으므로
+        // 드시 null 체크를 먼저해야 한다.
         try {
-            br = new BufferedReader(new FileReader(filepath));
-            T res = initVal;
-            String line = null;
-            while ((line = br.readLine()) != null) {
-                res = callback.doSomethingWithLine(line, res);
-            }
-            return res;
+          br.close();
         } catch (IOException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (br != null) {
-                // BufferedReader 오브젝트가 생성되기 전에 예외가 발생할 수도있으므로
-                // 드시 null 체크를 먼저해야 한다.
-                try {
-                    br.close();
-                } catch (IOException e) {
-                    System.out.println(e.getMessage());
-                }
-            }
+          System.out.println(e.getMessage());
         }
+      }
     }
+  }
 
-    public Integer calcSum(String filepath) throws IOException {
+  public Integer calcSum(String filepath) throws IOException {
 
-        LineCallback<Integer> sumCallback =
-                new LineCallback<Integer>() {
-                    @Override
-                    public Integer doSomethingWithLine(String line, Integer value) {
-                        return value + Integer.valueOf(line);
-                    }
-                };
-        return lineReadTemplate(filepath, sumCallback, 0);
-    }
+    LineCallback<Integer> sumCallback =
+        new LineCallback<Integer>() {
+          @Override
+          public Integer doSomethingWithLine(String line, Integer value) {
+            return value + Integer.valueOf(line);
+          }
+        };
+    return lineReadTemplate(filepath, sumCallback, 0);
+  }
 
-    public Integer calcMultiply(String filepath) throws IOException {
-        LineCallback<Integer> sumCallback =
-                new LineCallback<Integer>() {
-                    @Override
-                    public Integer doSomethingWithLine(String line, Integer value) {
-                        return value * Integer.valueOf(line);
-                    }
-                };
-        return lineReadTemplate(filepath, sumCallback, 1);
-    }
+  public Integer calcMultiply(String filepath) throws IOException {
+    LineCallback<Integer> sumCallback =
+        new LineCallback<Integer>() {
+          @Override
+          public Integer doSomethingWithLine(String line, Integer value) {
+            return value * Integer.valueOf(line);
+          }
+        };
+    return lineReadTemplate(filepath, sumCallback, 1);
+  }
 
-    public String concatenate(String filepath) throws IOException {
-        LineCallback<String> concatenateCallback =
-                new LineCallback<String>() {
-                    @Override
-                    public String doSomethingWithLine(String line, String value) {
-                        return value + line;
-                    }
-                };
-        return lineReadTemplate(filepath, concatenateCallback, "");
-    }
+  public String concatenate(String filepath) throws IOException {
+    LineCallback<String> concatenateCallback =
+        new LineCallback<String>() {
+          @Override
+          public String doSomethingWithLine(String line, String value) {
+            return value + line;
+          }
+        };
+    return lineReadTemplate(filepath, concatenateCallback, "");
+  }
 }

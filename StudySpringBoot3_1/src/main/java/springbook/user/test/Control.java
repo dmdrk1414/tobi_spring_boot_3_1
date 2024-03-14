@@ -6,22 +6,23 @@ import org.springframework.stereotype.Controller;
 
 @Controller
 public class Control {
-    private final Car car;
 
-    @Autowired
-    public Control(Car car) {
-        this.car = car;
-    }
+  private final Car car;
 
-    public void soundControl() {
-        this.car.sound();
-    }
+  @Autowired
+  public Control(Car car) {
+    this.car = car;
+  }
 
-    public void showColor() {
-        System.out.println(this.car.color());
-    }
+  public void soundControl() {
+    this.car.sound();
+  }
 
-    public void showPowerType() {
-        this.car.powerType();
-    }
+  public void showColor() {
+    System.out.println(this.car.color());
+  }
+
+  public void showPowerType() {
+    this.car.powerType();
+  }
 }
