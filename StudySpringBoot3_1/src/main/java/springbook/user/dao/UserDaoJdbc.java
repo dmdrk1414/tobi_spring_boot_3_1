@@ -4,6 +4,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import springbook.user.constant.Level;
 import springbook.user.domain.User;
 import springbook.user.exception.DuplicateUserIdException;
 
@@ -27,6 +28,9 @@ public class UserDaoJdbc implements UserDao {
           user.setId(rs.getString("id"));
           user.setName(rs.getString("name"));
           user.setPassword(rs.getString("password"));
+          user.setLevel(Level.valueOf(rs.getInt("level")));
+          user.setLogin(rs.getInt("login"));
+          user.setRecommend(rs.getInt("recommend"));
           return user;
         }
       };
@@ -49,8 +53,9 @@ public class UserDaoJdbc implements UserDao {
 
   public void add(final User user) throws DuplicateUserIdException {
     try {
-      String sql = "INSERT  INTO users(id, name, password) VALUES (?, ?, ?)";
-      this.jdbcTemplate.update(sql, user.getId(), user.getName(), user.getPassword());
+      String sql = "INSERT INTO users(id, name, password, level, login, recommend) VALUES (?, ?, ?, ?, ?, ?)";
+      this.jdbcTemplate.update(sql, user.getId(), user.getName(), user.getPassword(),
+          user.getLevel().intValue(), user.getLogin(), user.getRecommend());
     } catch (DuplicateKeyException e) {
       // DataAccessException의 상속을 받는 DuplicateKeyException을 try으로 처리한다.
       throw new DuplicateUserIdException(e);
