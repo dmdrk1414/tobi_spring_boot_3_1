@@ -16,6 +16,7 @@ import springbook.user.domain.User;
 import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.List;
+import springbook.user.service.UserService;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.hamcrest.CoreMatchers.is;
@@ -33,6 +34,8 @@ public class UserDaoTest {
   private UserDaoJdbc dao;
   @Autowired
   private DataSource dataSource;
+  @Autowired
+  private UserService userService;
   private User user1;
   private User user2;
   private User user3;
@@ -48,6 +51,12 @@ public class UserDaoTest {
     // test 용 xml을 설정하여 따로 DI을 하였다.
 //        DataSource dataSource = new SingleConnectionDataSource("jdbc:mysql://localhost/testdb", "root", "qkrtmdcks1!", true);
 //        userDao.setDataSource(dataSource);
+  }
+
+  @Test
+  public void bean() {
+    // p 331 userService 검증 테스트
+    assertThat(this.userService).isNotNull();
   }
 
   @Test

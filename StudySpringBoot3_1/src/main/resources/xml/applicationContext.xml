@@ -22,4 +22,12 @@
   <bean class="springbook.user.dao.UserDaoJdbc" id="dao">
     <property name="dataSource" ref="dataSource"/>
   </bean>
+
+  <bean class="springbook.user.service.UserService" id="userService">
+    <property name="userDao" ref="userDao"/>
+  </bean>
+
+  <bean class="springbook.user.dao.UserDaoJdbc" id="userDao">
+    <property name="dataSource" ref="dataSource"/>
+  </bean>
 </beans>
