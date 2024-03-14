@@ -5,6 +5,8 @@ import org.springframework.context.support.GenericXmlApplicationContext;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springbook.user.dao.*;
+import springbook.user.dao.test.CountingConnectionMaker;
+import springbook.user.dao.test.CountingDaoFactory;
 import springbook.user.domain.User;
 
 import java.sql.SQLException;
@@ -124,96 +126,97 @@ public class TestController {
 //        return list.toString();
 //    }
 
-    @GetMapping("user/dao/p124/test")
-    public String p124Test() throws SQLException, ClassNotFoundException {
-        // 124
-        // 기본적으로는 UserDaoTest와 같지만 설정용 클래스를 CountingDaoFactory로 변경
-        // CountingConnectionMaker 빈을 가져온다.
-        AnnotationConfigApplicationContext context =
-                new AnnotationConfigApplicationContext(CountingDaoFactory.class);
-        UserDaoJdbc dUserDao = context.getBean("countUserDao", UserDaoJdbc.class);
+  @GetMapping("user/dao/p124/test")
+  public String p124Test() throws SQLException, ClassNotFoundException {
+    // 124
+    // 기본적으로는 UserDaoTest와 같지만 설정용 클래스를 CountingDaoFactory로 변경
+    // CountingConnectionMaker 빈을 가져온다.
+    AnnotationConfigApplicationContext context =
+        new AnnotationConfigApplicationContext(CountingDaoFactory.class);
+    UserDaoJdbc dUserDao = context.getBean("countUserDao", UserDaoJdbc.class);
 
-        User user_D = new User("DUser", "박승찬", "married");
+    User user_D = new User("DUser", "박승찬", "married");
 
-        dUserDao.add(user_D);
+    dUserDao.add(user_D);
 
-        User searchDUser = dUserDao.get(user_D.getId());
+    User searchDUser = dUserDao.get(user_D.getId());
 
-        List<User> list = new ArrayList<>();
-        list.add(searchDUser);
+    List<User> list = new ArrayList<>();
+    list.add(searchDUser);
 
-        // p124
-        // CountingConnectionMaker빈을 가져온다.
-        // COuntingConnectionMaker에는 그동안 DAO를 통해 DB 커넥션을 요청한 횟수만큼 카운터가 증가.
-        // DL(읜존관계 검색)을 사용하면 이름을 이용해 어떤 빈이든 가져올 수 있다.
-        CountingConnectionMaker countingConnectionMaker = context.getBean("countConnectionMaker", CountingConnectionMaker.class);
-        System.out.println(countingConnectionMaker.getCounter());
+    // p124
+    // CountingConnectionMaker빈을 가져온다.
+    // COuntingConnectionMaker에는 그동안 DAO를 통해 DB 커넥션을 요청한 횟수만큼 카운터가 증가.
+    // DL(읜존관계 검색)을 사용하면 이름을 이용해 어떤 빈이든 가져올 수 있다.
+    CountingConnectionMaker countingConnectionMaker = context.getBean("countConnectionMaker",
+        CountingConnectionMaker.class);
+    System.out.println(countingConnectionMaker.getCounter());
 
-        return list.toString();
-    }
+    return list.toString();
+  }
 
-    /**
-     * DaoFactory 없이 UserDao 생성하는 방법
-     *
-     * @return
-     * @throws SQLException
-     * @throws ClassNotFoundException
-     */
-    @GetMapping("user/dao/p135/test")
-    public String p135Test() throws SQLException, ClassNotFoundException {
-        // p134
-        // xml 파일의 등록한 Bean을 Context으로 이용하는 방법
-        // GenericXmlApplicationContext을 많이 사용한다.
-        GenericXmlApplicationContext context =
-                new GenericXmlApplicationContext("xml/applicationContext.xml");
+  /**
+   * DaoFactory 없이 UserDao 생성하는 방법
+   *
+   * @return
+   * @throws SQLException
+   * @throws ClassNotFoundException
+   */
+  @GetMapping("user/dao/p135/test")
+  public String p135Test() throws SQLException, ClassNotFoundException {
+    // p134
+    // xml 파일의 등록한 Bean을 Context으로 이용하는 방법
+    // GenericXmlApplicationContext을 많이 사용한다.
+    GenericXmlApplicationContext context =
+        new GenericXmlApplicationContext("xml/applicationContext.xml");
 
-        // 관련 class을 이용한 content 이용 방법 보통 쓰지 않는다.
+    // 관련 class을 이용한 content 이용 방법 보통 쓰지 않는다.
 //        ClassPathXmlApplicationContext context =
 //                new ClassPathXmlApplicationContext("/applicationContext.xml");
-        UserDaoJdbc dUserDao = context.getBean("userDao", UserDaoJdbc.class);
+    UserDaoJdbc dUserDao = context.getBean("userDao", UserDaoJdbc.class);
 
-        User user_D = new User("DUser", "박승찬", "married");
+    User user_D = new User("DUser", "박승찬", "married");
 
-        dUserDao.add(user_D);
+    dUserDao.add(user_D);
 
-        User searchDUser = dUserDao.get(user_D.getId());
+    User searchDUser = dUserDao.get(user_D.getId());
 
-        List<User> list = new ArrayList<>();
-        list.add(searchDUser);
+    List<User> list = new ArrayList<>();
+    list.add(searchDUser);
 
-        return list.toString();
-    }
+    return list.toString();
+  }
 
-    @GetMapping("user/dao/p155/test")
-    public String p155Test() throws SQLException, ClassNotFoundException {
-        // p134
-        // xml 파일의 등록한 Bean을 Context으로 이용하는 방법
-        // GenericXmlApplicationContext을 많이 사용한다.
-        GenericXmlApplicationContext context =
-                new GenericXmlApplicationContext("xml/applicationContext.xml");
+  @GetMapping("user/dao/p155/test")
+  public String p155Test() throws SQLException, ClassNotFoundException {
+    // p134
+    // xml 파일의 등록한 Bean을 Context으로 이용하는 방법
+    // GenericXmlApplicationContext을 많이 사용한다.
+    GenericXmlApplicationContext context =
+        new GenericXmlApplicationContext("xml/applicationContext.xml");
 
-        // 관련 class을 이용한 content 이용 방법 보통 쓰지 않는다.
+    // 관련 class을 이용한 content 이용 방법 보통 쓰지 않는다.
 //        ClassPathXmlApplicationContext context =
 //                new ClassPathXmlApplicationContext("/applicationContext.xml");
-        UserDaoJdbc dUserDao = context.getBean("userDao", UserDaoJdbc.class);
+    UserDaoJdbc dUserDao = context.getBean("userDao", UserDaoJdbc.class);
 
-        User user_D = new User("DUser", "박승찬", "married");
+    User user_D = new User("DUser", "박승찬", "married");
 
-        dUserDao.add(user_D);
+    dUserDao.add(user_D);
 
-        User searchDUser = dUserDao.get(user_D.getId());
+    User searchDUser = dUserDao.get(user_D.getId());
 
-        List<User> list = new ArrayList<>();
-        list.add(searchDUser);
+    List<User> list = new ArrayList<>();
+    list.add(searchDUser);
 
-        if (!user_D.getName().equals(searchDUser.getName())) {
-            System.out.println("테스트 실패 name");
-        } else if (!user_D.getPassword().equals(searchDUser.getPassword())) {
-            System.out.println("테스트 실패 password");
-        } else {
-            System.out.println("조회 테스트 성공");
-        }
-
-        return list.toString();
+    if (!user_D.getName().equals(searchDUser.getName())) {
+      System.out.println("테스트 실패 name");
+    } else if (!user_D.getPassword().equals(searchDUser.getPassword())) {
+      System.out.println("테스트 실패 password");
+    } else {
+      System.out.println("조회 테스트 성공");
     }
+
+    return list.toString();
+  }
 }
