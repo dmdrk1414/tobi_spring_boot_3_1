@@ -52,9 +52,11 @@ public class UserDaoTest {
 
   @Test
   public void update() {
+    // p329
     dao.deleteAll();
 
     dao.add(user1);
+    dao.add(user2);
 
     user1.setName("오민규");
     user1.setPassword("spring06");
@@ -65,6 +67,8 @@ public class UserDaoTest {
 
     User user1Update = dao.get(user1.getId());
     checkSameUser(user1, user1Update);
+    User user2same = dao.get(user2.getId());
+    checkSameUser(user2, user2same);
   }
 
   @Test
