@@ -1,6 +1,11 @@
-CREATE TABLE users
+-- auto-generated definition
+create table users
 (
-    id       VARCHAR(10) PRIMARY KEY,
-    name     VARCHAR(20) NOT NULL,
-    password VARCHAR(10) NOT NULL
+    id       varchar(10) not null
+        primary key,
+    name     varchar(20) not null,
+    password varchar(10) not null,
+    level tinyint not null,
+    login int not null,
+    recommend int not null
 );
