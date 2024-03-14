@@ -9,6 +9,7 @@ import org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator;
 import org.springframework.jdbc.support.SQLExceptionTranslator;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import springbook.user.constant.Level;
 import springbook.user.dao.UserDaoJdbc;
 import springbook.user.domain.User;
 
@@ -41,9 +42,9 @@ public class UserDaoTest {
 
     @BeforeEach
     public void setUp() {
-        this.user1 = new User("gyumee", "박성철", "springno1");
-        this.user2 = new User("leegw700", "이길원", "springno2");
-        this.user3 = new User("bumhin", "박범진", "springno3");
+        this.user1 = new User("gyumee", "박성철", "springno1", Level.BASIC, 1, 0);
+        this.user2 = new User("leegw700", "이길원", "springno2", Level.SILVER, 55, 10);
+        this.user3 = new User("bumhin", "박범진", "springno3", Level.GOLD, 100, 40);
 
         // test 용 xml을 설정하여 따로 DI을 하였다.
 //        DataSource dataSource = new SingleConnectionDataSource("jdbc:mysql://localhost/testdb", "root", "qkrtmdcks1!", true);
@@ -57,18 +58,16 @@ public class UserDaoTest {
         userDao.deleteAll();
         assertThat(userDao.getCount()).isEqualTo(0);
 
-        User user = new User("dmdrk1414", "박승찬", "1234");
-
         // when
-        userDao.add(user);
+        userDao.add(user1);
 
         assertThat(userDao.getCount()).isEqualTo(1);
 
-        User user2 = userDao.get(user.getId());
+        User user2 = userDao.get(user1.getId());
 
         // then
-        assertThat(user2.getName()).contains(user.getName());
-        assertThat(user2.getPassword()).contains(user.getPassword());
+        assertThat(user2.getName()).contains(user1.getName());
+        assertThat(user2.getPassword()).contains(user1.getPassword());
     }
 
     @Test
