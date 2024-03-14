@@ -29,9 +29,7 @@ public class UserDaoTest {
     //      타입으로 가져올 빈 하나를 선택할 수 없는 경우에는 변수의 이름과 같은 이름의 빈이 있는지 확인
     //
     @Autowired
-    private UserDaoJdbc userDao;
-    @Autowired
-    private UserDaoJdbc userDao2;
+    private UserDaoJdbc dao;
     @Autowired
     private DataSource dataSource;
     private User user1;
@@ -55,15 +53,22 @@ public class UserDaoTest {
     public void addAndGet() throws Exception {
         // given
         // 테스트를 위한 deleteAll 추가
-        userDao.deleteAll();
-        assertThat(userDao.getCount()).isEqualTo(0);
+        dao.deleteAll();
+        assertThat(dao.getCount()).isEqualTo(0);
 
         // when
-        userDao.add(user1);
+        dao.add(user1);
 
-        assertThat(userDao.getCount()).isEqualTo(1);
+        assertThat(dao.getCount()).isEqualTo(1);
 
-        User user2 = userDao.get(user1.getId());
+        User user2 = dao.get(user1.getId());
+
+        // p323 서비스 추상화 추가.
+        User userget1 = dao.get(user1.getId());
+        checkSameUser(userget1, user1);
+
+        User userget2 = dao.get(user2.getId());
+        checkSameUser(userget2, user2);
 
         // then
         assertThat(user2.getName()).contains(user1.getName());
@@ -76,52 +81,52 @@ public class UserDaoTest {
 
         // when
         // then
-        userDao.deleteAll();
-        assertThat(userDao.getCount()).isEqualTo(0);
+        dao.deleteAll();
+        assertThat(dao.getCount()).isEqualTo(0);
 
-        userDao.add(user1);
-        assertThat(userDao.getCount()).isEqualTo(1);
+        dao.add(user1);
+        assertThat(dao.getCount()).isEqualTo(1);
 
-        userDao.add(user2);
-        assertThat(userDao.getCount()).isEqualTo(2);
+        dao.add(user2);
+        assertThat(dao.getCount()).isEqualTo(2);
 
-        userDao.add(user3);
-        assertThat(userDao.getCount()).isEqualTo(3);
+        dao.add(user3);
+        assertThat(dao.getCount()).isEqualTo(3);
     }
 
     @Test
     public void getUserFailure() throws SQLException {
         // given
-        userDao.deleteAll();
+        dao.deleteAll();
 
         // then
-        assertThat(userDao.getCount()).isEqualTo(0);
+        assertThat(dao.getCount()).isEqualTo(0);
 
         String searchId = "unknown_id";
-        assertThatThrownBy(() -> userDao.get(searchId))
+        assertThatThrownBy(() -> dao.get(searchId))
                 .isInstanceOf(EmptyResultDataAccessException.class);
     }
 
     @Test
     public void getAll() throws SQLException {
-        userDao.deleteAll();
+        dao.deleteAll();
 
-        List<User> user0 = userDao.getAll();
+        List<User> user0 = dao.getAll();
         assertThat(user0.size()).isEqualTo(0);
 
-        userDao.add(user1); // id: gyumee
-        List<User> users1 = userDao.getAll();
+        dao.add(user1); // id: gyumee
+        List<User> users1 = dao.getAll();
         assertThat(users1.size()).isEqualTo(1);
         checkSameUser(user1, users1.get(0));
 
-        userDao.add(user2); // id: leegw700
-        List<User> users2 = userDao.getAll();
+        dao.add(user2); // id: leegw700
+        List<User> users2 = dao.getAll();
         assertThat(users2.size()).isEqualTo(2);
         checkSameUser(user1, users2.get(0));
         checkSameUser(user2, users2.get(1));
 
-        userDao.add(user3); // id: bumjin
-        List<User> users3 = userDao.getAll();
+        dao.add(user3); // id: bumjin
+        List<User> users3 = dao.getAll();
         assertThat(users3.size()).isEqualTo(3);
         checkSameUser(user3, users3.get(0));
         checkSameUser(user1, users3.get(1));
@@ -140,11 +145,11 @@ public class UserDaoTest {
 
     @Test
     public void sqlExceptionTranslate() {
-        userDao.deleteAll();
+        dao.deleteAll();
 
         try {
-            userDao.add(user1);
-            userDao.add(user1);
+            dao.add(user1);
+            dao.add(user1);
         } catch (DuplicateKeyException ex) {
             SQLException sqlException = (SQLException) ex.getRootCause();
             SQLExceptionTranslator set = new SQLErrorCodeSQLExceptionTranslator(this.dataSource);
